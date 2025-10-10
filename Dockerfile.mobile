@@ -1,0 +1,70 @@
+# Multi-stage build for React Native mobile app
+FROM node:20-alpine AS base
+
+# Set working directory
+WORKDIR /app
+
+# Install system dependencies
+RUN apk add --no-cache \
+    git \
+    curl \
+    bash \
+    openjdk11-jre \
+    android-sdk \
+    android-sdk-build-tools \
+    android-sdk-platform-tools
+
+# Set environment variables for Android
+ENV ANDROID_HOME=/opt/android-sdk
+ENV ANDROID_SDK_ROOT=/opt/android-sdk
+ENV PATH=$PATH:$ANDROID_HOME/tools:$ANDROID_HOME/platform-tools
+
+# Install React Native CLI
+RUN npm install -g @react-native-community/cli
+
+# Copy package files
+COPY mobile/package*.json ./
+
+# Install dependencies
+RUN npm ci
+
+# Copy source code
+COPY mobile/src ./src
+COPY mobile/index.js ./
+COPY mobile/babel.config.js ./
+COPY mobile/metro.config.js ./
+COPY mobile/tsconfig.json ./
+
+# Build stage for Android
+FROM base AS android-build
+
+# Copy Android configuration files (if they exist)
+COPY mobile/android ./android
+
+# Build Android APK
+RUN cd android && ./gradlew assembleRelease
+
+# Build stage for iOS (requires macOS)
+FROM base AS ios-build
+
+# Copy iOS configuration files (if they exist)
+COPY mobile/ios ./ios
+
+# Install iOS dependencies
+RUN cd ios && pod install
+
+# Build iOS app
+RUN npx react-native run-ios --configuration Release
+
+# Final stage
+FROM base AS final
+
+# Copy built artifacts
+COPY --from=android-build /app/android/app/build/outputs/apk/release/app-release.apk ./builds/
+COPY --from=ios-build /app/ios/build/Release-iphoneos/ ./builds/ios/
+
+# Expose port for Metro bundler (development)
+EXPOSE 8081
+
+# Default command (can be overridden)
+CMD ["npm", "start"]
