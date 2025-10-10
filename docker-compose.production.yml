@@ -5,30 +5,66 @@ services:
   mysql:
     image: mysql:8.0
     container_name: techpulse-mysql
+    restart: unless-stopped
     environment:
       MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
       MYSQL_DATABASE: ${DB_NAME}
       MYSQL_USER: ${DB_USER}
       MYSQL_PASSWORD: ${DB_PASSWORD}
+      MYSQL_CHARACTER_SET_SERVER: utf8mb4
+      MYSQL_COLLATION_SERVER: utf8mb4_unicode_ci
     volumes:
       - mysql_data:/var/lib/mysql
-      - ./backend/init.sql:/docker-entrypoint-initdb.d/init.sql
+      - mysql_logs:/var/log/mysql
+      - ./backend/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+      - ./mysql/my.cnf:/etc/mysql/conf.d/my.cnf:ro
     ports:
       - "3306:3306"
     networks:
       - techpulse-network
-    restart: unless-stopped
     healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
-      timeout: 20s
-      retries: 10
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p${DB_ROOT_PASSWORD}"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 30s
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
 
-  # Backend API
-  backend:
+  # Redis Cache
+  redis:
+    image: redis:7-alpine
+    container_name: techpulse-redis
+    restart: unless-stopped
+    command: redis-server --appendonly yes --requirepass ${REDIS_PASSWORD}
+    volumes:
+      - redis_data:/data
+      - ./redis/redis.conf:/usr/local/etc/redis/redis.conf:ro
+    ports:
+      - "6379:6379"
+    networks:
+      - techpulse-network
+    healthcheck:
+      test: ["CMD", "redis-cli", "--raw", "incr", "ping"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  # Node.js Backend API
+  web:
     build:
       context: ./backend
       dockerfile: Dockerfile.production
     container_name: techpulse-backend
+    restart: unless-stopped
     environment:
       NODE_ENV: production
       PORT: 5000
@@ -37,11 +73,19 @@ services:
       DB_PASSWORD: ${DB_PASSWORD}
       DB_NAME: ${DB_NAME}
       JWT_SECRET: ${JWT_SECRET}
+      JWT_EXPIRES_IN: 24h
+      REDIS_URL: redis://:${REDIS_PASSWORD}@redis:6379
       NEWSAPI_KEY: ${NEWSAPI_KEY}
       GUARDIAN_API_KEY: ${GUARDIAN_API_KEY}
       DEVTO_API_KEY: ${DEVTO_API_KEY}
       HACKERNEWS_API_BASE_URL: ${HACKERNEWS_API_BASE_URL}
-      REDIS_URL: redis://redis:6379
+      RATE_LIMIT_WINDOW: 900000
+      RATE_LIMIT_MAX: 100
+      CORS_ORIGIN: ${CORS_ORIGIN}
+      LOG_LEVEL: info
+    volumes:
+      - app_logs:/app/logs
+      - app_uploads:/app/uploads
     ports:
       - "5000:5000"
     depends_on:
@@ -51,86 +95,255 @@ services:
         condition: service_healthy
     networks:
       - techpulse-network
-    restart: unless-stopped
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:5000/health"]
       interval: 30s
       timeout: 10s
       retries: 3
-
-  # Redis Cache
-  redis:
-    image: redis:7-alpine
-    container_name: techpulse-redis
-    ports:
-      - "6379:6379"
-    volumes:
-      - redis_data:/data
-    networks:
-      - techpulse-network
-    restart: unless-stopped
-    healthcheck:
-      test: ["CMD", "redis-cli", "ping"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
+      start_period: 40s
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+    deploy:
+      resources:
+        limits:
+          cpus: '1.0'
+          memory: 1G
+        reservations:
+          cpus: '0.5'
+          memory: 512M
 
   # Nginx Reverse Proxy
   nginx:
     image: nginx:alpine
     container_name: techpulse-nginx
+    restart: unless-stopped
     ports:
       - "80:80"
       - "443:443"
     volumes:
-      - ./nginx.production.conf:/etc/nginx/nginx.conf
-      - ./ssl:/etc/nginx/ssl
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./nginx/conf.d:/etc/nginx/conf.d:ro
+      - ./ssl:/etc/nginx/ssl:ro
+      - nginx_logs:/var/log/nginx
+      - static_files:/var/www/static
     depends_on:
-      - backend
+      - web
     networks:
       - techpulse-network
-    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
 
-  # Monitoring with Prometheus
+  # Prometheus Monitoring
   prometheus:
-    image: prom/prometheus
+    image: prom/prometheus:latest
     container_name: techpulse-prometheus
-    ports:
-      - "9090:9090"
-    volumes:
-      - ./monitoring/prometheus.yml:/etc/prometheus/prometheus.yml
-      - prometheus_data:/prometheus
+    restart: unless-stopped
     command:
       - '--config.file=/etc/prometheus/prometheus.yml'
       - '--storage.tsdb.path=/prometheus'
       - '--web.console.libraries=/etc/prometheus/console_libraries'
       - '--web.console.templates=/etc/prometheus/consoles'
-      - '--storage.tsdb.retention.time=200h'
+      - '--storage.tsdb.retention.time=30d'
       - '--web.enable-lifecycle'
+      - '--web.enable-admin-api'
+    volumes:
+      - ./monitoring/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - ./monitoring/alert_rules.yml:/etc/prometheus/alert_rules.yml:ro
+      - prometheus_data:/prometheus
+    ports:
+      - "9090:9090"
     networks:
       - techpulse-network
-    restart: unless-stopped
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
 
   # Grafana Dashboard
   grafana:
-    image: grafana/grafana
+    image: grafana/grafana:latest
     container_name: techpulse-grafana
-    ports:
-      - "3000:3000"
+    restart: unless-stopped
     environment:
       GF_SECURITY_ADMIN_PASSWORD: ${GRAFANA_PASSWORD}
+      GF_USERS_ALLOW_SIGN_UP: false
+      GF_SECURITY_SECRET_KEY: ${GRAFANA_SECRET_KEY}
+      GF_INSTALL_PLUGINS: grafana-clock-panel,grafana-simple-json-datasource
     volumes:
       - grafana_data:/var/lib/grafana
+      - ./monitoring/grafana/dashboards:/etc/grafana/provisioning/dashboards:ro
+      - ./monitoring/grafana/datasources:/etc/grafana/provisioning/datasources:ro
+    ports:
+      - "3000:3000"
     networks:
       - techpulse-network
-    restart: unless-stopped
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
 
+  # Node Exporter for System Metrics
+  node-exporter:
+    image: prom/node-exporter:latest
+    container_name: techpulse-node-exporter
+    restart: unless-stopped
+    volumes:
+      - /proc:/host/proc:ro
+      - /sys:/host/sys:ro
+      - /:/rootfs:ro
+    command:
+      - '--path.procfs=/host/proc'
+      - '--path.rootfs=/rootfs'
+      - '--path.sysfs=/host/sys'
+      - '--collector.filesystem.mount-points-exclude=^/(sys|proc|dev|host|etc)($$|/)'
+    ports:
+      - "9100:9100"
+    networks:
+      - techpulse-network
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  # MySQL Exporter
+  mysql-exporter:
+    image: prom/mysqld-exporter:latest
+    container_name: techpulse-mysql-exporter
+    restart: unless-stopped
+    environment:
+      DATA_SOURCE_NAME: "${DB_USER}:${DB_PASSWORD}@(mysql:3306)/${DB_NAME}"
+    ports:
+      - "9104:9104"
+    depends_on:
+      - mysql
+    networks:
+      - techpulse-network
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  # Redis Exporter
+  redis-exporter:
+    image: oliver006/redis_exporter:latest
+    container_name: techpulse-redis-exporter
+    restart: unless-stopped
+    environment:
+      REDIS_ADDR: redis://redis:6379
+      REDIS_PASSWORD: ${REDIS_PASSWORD}
+    ports:
+      - "9121:9121"
+    depends_on:
+      - redis
+    networks:
+      - techpulse-network
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  # Certbot for SSL Certificate Management
+  certbot:
+    image: certbot/certbot
+    container_name: techpulse-certbot
+    volumes:
+      - ./ssl:/etc/letsencrypt
+      - ./nginx/html:/var/www/html
+    command: certonly --webroot --webroot-path=/var/www/html --email ${SSL_EMAIL} --agree-tos --no-eff-email -d ${DOMAIN_NAME} -d www.${DOMAIN_NAME}
+    networks:
+      - techpulse-network
+
+  # Backup Service
+  backup:
+    image: mysql:8.0
+    container_name: techpulse-backup
+    restart: "no"
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+    volumes:
+      - mysql_backups:/backups
+      - ./scripts/backup.sh:/backup.sh:ro
+    command: /bin/bash -c "chmod +x /backup.sh && /backup.sh"
+    depends_on:
+      - mysql
+    networks:
+      - techpulse-network
+
+# Named Volumes
 volumes:
   mysql_data:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: /opt/techpulse/data/mysql
+  mysql_logs:
+    driver: local
+  mysql_backups:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: /opt/techpulse/backups
   redis_data:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: /opt/techpulse/data/redis
+  app_logs:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: /opt/techpulse/logs
+  app_uploads:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: /opt/techpulse/uploads
+  nginx_logs:
+    driver: local
+  static_files:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: /opt/techpulse/static
   prometheus_data:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: /opt/techpulse/data/prometheus
   grafana_data:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: /opt/techpulse/data/grafana
 
+# Networks
 networks:
   techpulse-network:
     driver: bridge
+    ipam:
+      config:
+        - subnet: 172.20.0.0/16
