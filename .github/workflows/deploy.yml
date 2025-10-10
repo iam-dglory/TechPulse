@@ -1,0 +1,128 @@
+name: TechPulse Production Deployment
+
+on:
+  push:
+    branches: [ main ]
+    tags: [ 'v*' ]
+  pull_request:
+    branches: [ main ]
+
+env:
+  REGISTRY: ghcr.io
+  IMAGE_NAME: iam-dglory/techpulse
+
+jobs:
+  # Backend Tests and Build
+  backend:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./backend
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20'
+        cache: 'npm'
+        cache-dependency-path: backend/package-lock.json
+
+    - name: Install dependencies
+      run: npm ci
+
+    - name: Run tests
+      run: npm test
+      env:
+        NODE_ENV: test
+        DB_HOST: localhost
+        DB_USER: test
+        DB_PASSWORD: test
+        DB_NAME: techpulse_test
+
+    - name: Build Docker image
+      run: |
+        docker build -f Dockerfile.production -t ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-backend:${{ github.sha }} .
+
+    - name: Push Docker image
+      if: github.ref == 'refs/heads/main'
+      run: |
+        echo ${{ secrets.GITHUB_TOKEN }} | docker login ${{ env.REGISTRY }} -u ${{ github.actor }} --password-stdin
+        docker push ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-backend:${{ github.sha }}
+
+  # Mobile App Build
+  mobile:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./TechNewsApp
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20'
+        cache: 'npm'
+        cache-dependency-path: TechNewsApp/package-lock.json
+
+    - name: Install dependencies
+      run: npm ci
+
+    - name: Setup EAS
+      uses: expo/expo-github-action@v8
+      with:
+        eas-version: latest
+        token: ${{ secrets.EXPO_TOKEN }}
+
+    - name: Build Android
+      if: github.ref == 'refs/heads/main'
+      run: eas build --platform android --profile production --non-interactive
+
+    - name: Build iOS
+      if: github.ref == 'refs/heads/main'
+      run: eas build --platform ios --profile production --non-interactive
+
+  # Deploy to Production
+  deploy:
+    needs: [backend, mobile]
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Deploy to production
+      run: |
+        chmod +x deploy-production.sh
+        ./deploy-production.sh ${{ github.sha }}
+      env:
+        PRODUCTION_SERVER: ${{ secrets.PRODUCTION_SERVER }}
+        PRODUCTION_USER: ${{ secrets.PRODUCTION_USER }}
+        PRODUCTION_PATH: ${{ secrets.PRODUCTION_PATH }}
+        SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+
+  # Security Scan
+  security:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Run Trivy vulnerability scanner
+      uses: aquasecurity/trivy-action@master
+      with:
+        scan-type: 'fs'
+        scan-ref: '.'
+        format: 'sarif'
+        output: 'trivy-results.sarif'
+
+    - name: Upload Trivy scan results
+      uses: github/codeql-action/upload-sarif@v2
+      with:
+        sarif_file: 'trivy-results.sarif'
