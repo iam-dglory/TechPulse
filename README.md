@@ -122,7 +122,7 @@ TechPulse/
 
 1. **Clone the repository**
 ```bash
-git clone https://github.com/iamd_glory/TechPulse.git
+git clone https://github.com/iam-dglory/TechPulse.git
 cd TechPulse
 ```
 
@@ -240,8 +240,8 @@ We welcome contributions from:
 
 ## 📞 **Contact**
 
-- **GitHub**: https://github.com/iamd_glory/TechPulse
-- **Email**: techpulse@iamd_glory.dev
+- **GitHub**: https://github.com/iam-dglory/TechPulse
+- **Email**: techpulse@iam-dglory.dev
 - **Discord**: [Join our community](https://discord.gg/techpulse)
 
 ## 📄 **License**
