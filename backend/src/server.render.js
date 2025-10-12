@@ -240,6 +240,23 @@ app.get('/health', (req, res) => {
 });
 
 // Authentication routes
+app.get('/api/auth/register', (req, res) => {
+  res.json({
+    message: "Registration endpoint",
+    method: "Use POST to register a new user",
+    example: {
+      method: "POST",
+      url: "/api/auth/register",
+      body: {
+        email: "user@example.com",
+        password: "password123",
+        username: "username",
+        fullName: "Full Name"
+      }
+    }
+  });
+});
+
 app.post('/api/auth/register', async (req, res) => {
   try {
     const { email, password, username, fullName } = req.body;
@@ -374,6 +391,46 @@ app.get('/api/posts', async (req, res) => {
       }
 
       const result = await pool.query(`${query} ${orderBy} LIMIT $1`, [parseInt(limit)]);
+      
+      // If no posts in database, return sample data
+      if (result.rows.length === 0) {
+        const samplePosts = [
+          {
+            id: 1,
+            title: "AI Bias in Hiring Systems",
+            content: "Multiple companies report AI systems showing bias against certain demographics in hiring processes.",
+            type: "grievance",
+            category: "AI Ethics",
+            criticality: "high",
+            ai_risk_score: 8,
+            government_action: "pending",
+            location: "Global",
+            tags: ["AI", "Bias", "Hiring", "Discrimination"],
+            votes_up: 15,
+            votes_down: 2,
+            hot_score: 13.5,
+            created_at: new Date()
+          },
+          {
+            id: 2,
+            title: "ChatGPT-5 Released with Advanced Reasoning",
+            content: "OpenAI announces ChatGPT-5 with significantly improved reasoning capabilities and multimodal understanding.",
+            type: "ai_news",
+            category: "AI Development",
+            criticality: "medium",
+            ai_risk_score: 5,
+            government_action: null,
+            location: "Global",
+            tags: ["ChatGPT", "OpenAI", "AI", "Reasoning"],
+            votes_up: 23,
+            votes_down: 1,
+            hot_score: 22.8,
+            created_at: new Date()
+          }
+        ];
+        return res.json(samplePosts);
+      }
+      
       res.json(result.rows);
     } else {
       // Fallback to in-memory
@@ -391,7 +448,7 @@ app.get('/api/posts', async (req, res) => {
     }
   } catch (error) {
     console.error('Posts fetch error:', error);
-    res.status(500).json({ error: 'Failed to fetch posts' });
+    res.status(500).json({ error: 'Failed to fetch posts', details: error.message });
   }
 });
 
