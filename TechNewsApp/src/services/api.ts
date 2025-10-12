@@ -1,5 +1,6 @@
-import axios, { AxiosInstance, AxiosResponse } from 'axios';
+import axios, { AxiosInstance, AxiosResponse, AxiosError } from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import Toast from 'react-native-toast-message';
 import {
   AuthResponse,
   LoginCredentials,
@@ -47,13 +48,46 @@ class ApiService {
       }
     );
 
-    // Response interceptor to handle auth errors
+    // Response interceptor to handle errors and show toasts
     this.api.interceptors.response.use(
       (response) => response,
-      async (error) => {
-        if (error.response?.status === 401) {
-          await AsyncStorage.removeItem('authToken');
-          // You might want to redirect to login screen here
+      async (error: AxiosError) => {
+        // Handle network errors
+        if (!error.response) {
+          Toast.show({
+            type: 'error',
+            text1: 'Network Error',
+            text2: 'Please check your internet connection',
+            visibilityTime: 4000,
+          });
+        } else {
+          // Handle HTTP errors
+          switch (error.response.status) {
+            case 401:
+              await AsyncStorage.removeItem('authToken');
+              Toast.show({
+                type: 'error',
+                text1: 'Authentication Error',
+                text2: 'Please login again',
+                visibilityTime: 3000,
+              });
+              break;
+            case 500:
+              Toast.show({
+                type: 'error',
+                text1: 'Server Error',
+                text2: 'Something went wrong. Please try again later.',
+                visibilityTime: 4000,
+              });
+              break;
+            default:
+              Toast.show({
+                type: 'error',
+                text1: 'Error',
+                text2: error.response.data?.error || 'An unexpected error occurred',
+                visibilityTime: 3000,
+              });
+          }
         }
         return Promise.reject(error);
       }
@@ -71,19 +105,85 @@ class ApiService {
     return response.data;
   }
 
+  // Health check endpoint
+  async checkHealth(): Promise<any> {
+    try {
+      const response: AxiosResponse<any> = await axios.get('https://texhpulze.onrender.com/health', {
+        timeout: 10000,
+      });
+      
+      if (response.data.status === 'ok') {
+        Toast.show({
+          type: 'success',
+          text1: 'Server Connected',
+          text2: `TexhPulze API is running (${response.data.database})`,
+          visibilityTime: 3000,
+        });
+      }
+      
+      return response.data;
+    } catch (error) {
+      Toast.show({
+        type: 'error',
+        text1: 'Server Offline',
+        text2: 'Unable to connect to TexhPulze server',
+        visibilityTime: 4000,
+      });
+      throw error;
+    }
+  }
+
   // Posts endpoints (for grievances and AI news)
   async getPosts(params?: any): Promise<any> {
-    const response: AxiosResponse<any> = await this.api.get('/posts', { params });
-    return response.data;
+    try {
+      const response: AxiosResponse<any> = await this.api.get('/posts', { params });
+      
+      // Handle empty responses gracefully
+      if (!response.data || (Array.isArray(response.data) && response.data.length === 0)) {
+        Toast.show({
+          type: 'info',
+          text1: 'No Posts Found',
+          text2: 'Be the first to post a grievance or AI news!',
+          visibilityTime: 3000,
+        });
+        return [];
+      }
+      
+      return response.data;
+    } catch (error) {
+      console.error('Error fetching posts:', error);
+      // Return empty array for graceful fallback
+      return [];
+    }
   }
 
   async createPost(post: any): Promise<any> {
     const response: AxiosResponse<any> = await this.api.post('/posts', post);
+    
+    if (response.data) {
+      Toast.show({
+        type: 'success',
+        text1: 'Post Created',
+        text2: 'Your post has been submitted successfully',
+        visibilityTime: 3000,
+      });
+    }
+    
     return response.data;
   }
 
   async votePost(id: number, voteType: string): Promise<any> {
     const response: AxiosResponse<any> = await this.api.post(`/posts/${id}/vote`, { vote_type: voteType });
+    
+    if (response.data?.success) {
+      Toast.show({
+        type: 'success',
+        text1: 'Vote Recorded',
+        text2: `Your ${voteType}vote has been recorded`,
+        visibilityTime: 2000,
+      });
+    }
+    
     return response.data;
   }
 
