@@ -19,8 +19,8 @@ class ApiService {
   private baseURL: string;
 
   constructor() {
-    // Use your computer's IP address for mobile testing
-    this.baseURL = 'http://192.168.29.31:5000/api'; // Your computer's IP
+    // Production API URL for TexhPulze on Render
+    this.baseURL = 'https://texhpulze.onrender.com/api';
     this.api = axios.create({
       baseURL: this.baseURL,
       timeout: 10000,
@@ -68,6 +68,22 @@ class ApiService {
 
   async register(credentials: RegisterCredentials): Promise<AuthResponse> {
     const response: AxiosResponse<AuthResponse> = await this.api.post('/auth/register', credentials);
+    return response.data;
+  }
+
+  // Posts endpoints (for grievances and AI news)
+  async getPosts(params?: any): Promise<any> {
+    const response: AxiosResponse<any> = await this.api.get('/posts', { params });
+    return response.data;
+  }
+
+  async createPost(post: any): Promise<any> {
+    const response: AxiosResponse<any> = await this.api.post('/posts', post);
+    return response.data;
+  }
+
+  async votePost(id: number, voteType: string): Promise<any> {
+    const response: AxiosResponse<any> = await this.api.post(`/posts/${id}/vote`, { vote_type: voteType });
     return response.data;
   }
 
