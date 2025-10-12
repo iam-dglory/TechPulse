@@ -1,22 +1,25 @@
 export default {
   expo: {
-    name: "TechPulse",
-    slug: "techpulse",
+    name: "TexhPulze",
+    slug: "texhpulze",
     version: "1.0.0",
     orientation: "portrait",
-    icon: "./assets/icon.png",
+    description: "Your gateway to tech news - AI, gadgets, software, and more. Stay informed with the latest technology trends and innovations.",
+    keywords: ["tech", "news", "AI", "gadgets", "software", "technology", "innovation"],
+    primaryColor: "#4ECDC4",
+        icon: "./assets/logo-texhpulze.svg",
     userInterfaceStyle: "light",
-    splash: {
-      image: "./assets/splash.png",
-      resizeMode: "contain",
-      backgroundColor: "#4ECDC4"
-    },
+        splash: {
+            image: "./assets/logo-texhpulze.svg",
+            resizeMode: "contain",
+            backgroundColor: "#000000"
+        },
     assetBundlePatterns: [
       "**/*"
     ],
     ios: {
       supportsTablet: true,
-      bundleIdentifier: "com.iamdglory.techpulse",
+      bundleIdentifier: "com.iamdglory.texhpulze",
       buildNumber: "1.0.0",
       infoPlist: {
         NSUserTrackingUsageDescription: "This app uses tracking to provide personalized content and analytics.",
@@ -25,12 +28,13 @@ export default {
         NSLocationWhenInUseUsageDescription: "This app uses location to provide location-based grievance reporting.",
       }
     },
-    android: {
-      adaptiveIcon: {
-        foregroundImage: "./assets/adaptive-icon.png",
-        backgroundColor: "#4ECDC4"
-      },
-      package: "com.iamdglory.techpulse",
+        android: {
+            adaptiveIcon: {
+                foregroundImage: "./assets/logo-texhpulze.svg",
+                backgroundColor: "#4169E1",
+                monochromeImage: "./assets/logo-texhpulze.svg"
+            },
+      package: "com.iamdglory.texhpulze",
       versionCode: 1,
       permissions: [
         "CAMERA",
@@ -42,9 +46,9 @@ export default {
         "ACCESS_NETWORK_STATE"
       ]
     },
-    web: {
-      favicon: "./assets/favicon.png"
-    },
+        web: {
+            favicon: "./assets/favicon.ico"
+        },
     plugins: [
       "expo-dev-client",
       [

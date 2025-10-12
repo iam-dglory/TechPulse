@@ -1,6 +1,7 @@
 const { validationResult } = require('express-validator');
 const { pool } = require('../config/database');
 const newsAggregator = require('../services/newsAggregator');
+const fallbackMiddleware = require('../middleware/fallback');
 
 // Get articles with pagination and filtering
 const getArticles = async (req, res) => {
@@ -64,6 +65,14 @@ const getArticles = async (req, res) => {
     });
   } catch (error) {
     console.error('Get articles error:', error);
+    
+    // Check if it's a database error and use fallback
+    if (fallbackMiddleware.isDatabaseError(error)) {
+      console.log('🔄 Using fallback data for getArticles');
+      const fallbackResult = fallbackMiddleware.getFallbackArticles(req.query);
+      return res.json(fallbackResult);
+    }
+    
     res.status(500).json({ error: 'Failed to fetch articles' });
   }
 };
@@ -116,6 +125,20 @@ const searchArticles = async (req, res) => {
     });
   } catch (error) {
     console.error('Search articles error:', error);
+    
+    // Check if it's a database error and use fallback
+    if (fallbackMiddleware.isDatabaseError(error)) {
+      console.log('🔄 Using fallback data for searchArticles');
+      const fallbackResult = fallbackMiddleware.getFallbackArticles({
+        ...req.query,
+        search: req.query.q
+      });
+      return res.json({
+        ...fallbackResult,
+        query: req.query.q
+      });
+    }
+    
     res.status(500).json({ error: 'Search failed' });
   }
 };
@@ -139,6 +162,22 @@ const getArticleById = async (req, res) => {
     res.json({ article: articles[0] });
   } catch (error) {
     console.error('Get article by ID error:', error);
+    
+    // Check if it's a database error and use fallback
+    if (fallbackMiddleware.isDatabaseError(error)) {
+      console.log('🔄 Using fallback data for getArticleById');
+      const fallbackArticle = fallbackMiddleware.getFallbackArticleById(req.params.id);
+      if (fallbackArticle) {
+        return res.json({ 
+          article: fallbackArticle,
+          fallback_mode: true,
+          message: "Serving fallback data due to database unavailability"
+        });
+      } else {
+        return res.status(404).json({ error: 'Article not found' });
+      }
+    }
+    
     res.status(500).json({ error: 'Failed to fetch article' });
   }
 };
@@ -153,6 +192,14 @@ const getCategories = async (req, res) => {
     res.json({ categories });
   } catch (error) {
     console.error('Get categories error:', error);
+    
+    // Check if it's a database error and use fallback
+    if (fallbackMiddleware.isDatabaseError(error)) {
+      console.log('🔄 Using fallback data for getCategories');
+      const fallbackResult = fallbackMiddleware.getFallbackCategories();
+      return res.json(fallbackResult);
+    }
+    
     res.status(500).json({ error: 'Failed to fetch categories' });
   }
 };

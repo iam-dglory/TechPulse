@@ -1,0 +1,4 @@
+PLACEHOLDER: Replace this file with actual 1024x1024 PNG for Android adaptive icon
+This should be the same as icon.png but optimized for Android's adaptive icon system.
+The adaptive icon will be masked by Android's system, so ensure the important content is centered.
+TexhPulze adaptive icon for Android devices.

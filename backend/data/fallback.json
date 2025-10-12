@@ -1,0 +1,147 @@
+{
+  "articles": [
+    {
+      "id": 1,
+      "title": "OpenAI Releases GPT-5 with Enhanced Reasoning Capabilities",
+      "summary": "OpenAI has announced the release of GPT-5, featuring improved reasoning abilities, better context understanding, and enhanced multimodal capabilities. The new model shows significant improvements in mathematical reasoning and code generation.",
+      "content": "OpenAI's latest language model, GPT-5, represents a major leap forward in artificial intelligence capabilities. The model demonstrates enhanced reasoning abilities that allow it to tackle complex problems with greater accuracy and understanding. Key improvements include better context retention across longer conversations, improved mathematical reasoning, and more sophisticated code generation capabilities. The multimodal features have also been enhanced, allowing for better integration of text, images, and other data types. Early testing shows GPT-5 outperforms its predecessor in a wide range of benchmarks, particularly in areas requiring logical reasoning and creative problem-solving.",
+      "url": "https://example.com/gpt-5-release",
+      "source": "TechCrunch",
+      "category": "AI",
+      "image_url": "https://via.placeholder.com/400x200/4ECDC4/FFFFFF?text=GPT-5+Release",
+      "published_at": "2024-01-15T10:00:00Z",
+      "created_at": "2024-01-15T10:00:00Z",
+      "updated_at": "2024-01-15T10:00:00Z"
+    },
+    {
+      "id": 2,
+      "title": "Apple Unveils Revolutionary AR Glasses with Neural Interface",
+      "summary": "Apple's new AR glasses feature a neural interface that allows users to control devices with their thoughts. The glasses include advanced eye-tracking technology and seamless integration with the Apple ecosystem.",
+      "content": "Apple has taken a bold step into the future of augmented reality with their latest AR glasses featuring a revolutionary neural interface. The device allows users to interact with digital content through thought-based commands, marking a significant advancement in human-computer interaction. The glasses feature advanced eye-tracking technology that can detect subtle eye movements and translate them into precise cursor movements. The neural interface uses non-invasive sensors to detect brain signals, enabling users to control apps, send messages, and navigate interfaces without physical interaction. The device seamlessly integrates with the Apple ecosystem, allowing users to access their iPhone, iPad, and Mac applications directly through the AR interface.",
+      "url": "https://example.com/apple-ar-glasses",
+      "source": "The Verge",
+      "category": "Gadgets",
+      "image_url": "https://via.placeholder.com/400x200/FF6B6B/FFFFFF?text=Apple+AR+Glasses",
+      "published_at": "2024-01-14T14:30:00Z",
+      "created_at": "2024-01-14T14:30:00Z",
+      "updated_at": "2024-01-14T14:30:00Z"
+    },
+    {
+      "id": 3,
+      "title": "Microsoft's Copilot AI Revolutionizes Software Development",
+      "summary": "Microsoft's Copilot AI assistant is transforming how developers write code, with new features that can generate entire applications from natural language descriptions and automatically fix bugs.",
+      "content": "Microsoft's Copilot AI has evolved into a comprehensive development assistant that's changing the landscape of software engineering. The latest version can generate entire applications from natural language descriptions, automatically identify and fix bugs, and provide intelligent code suggestions that go far beyond simple autocompletion. Developers report significant productivity improvements, with some teams seeing 40% faster development cycles. The AI can understand complex requirements, suggest optimal architectures, and even write unit tests. Microsoft has also integrated Copilot with popular development tools and frameworks, making it accessible to developers across different programming languages and platforms.",
+      "url": "https://example.com/microsoft-copilot-ai",
+      "source": "Wired",
+      "category": "Software",
+      "image_url": "https://via.placeholder.com/400x200/4ECDC4/FFFFFF?text=Copilot+AI",
+      "published_at": "2024-01-13T09:15:00Z",
+      "created_at": "2024-01-13T09:15:00Z",
+      "updated_at": "2024-01-13T09:15:00Z"
+    },
+    {
+      "id": 4,
+      "title": "Tesla's Neural Network Achieves Full Self-Driving Breakthrough",
+      "summary": "Tesla's latest neural network update has achieved a major milestone in autonomous driving, with the system now capable of handling complex urban scenarios and edge cases with human-level performance.",
+      "content": "Tesla's Full Self-Driving (FSD) system has reached a significant milestone with the latest neural network update. The system can now navigate complex urban environments, handle unexpected situations, and make decisions that rival human drivers. The breakthrough comes from improvements in the company's end-to-end neural network architecture, which processes raw sensor data directly into driving commands. The system has been trained on billions of miles of real-world driving data, allowing it to handle rare edge cases and complex scenarios that were previously challenging for autonomous systems. Tesla reports a 99.9% reduction in intervention rates compared to previous versions.",
+      "url": "https://example.com/tesla-fsd-breakthrough",
+      "source": "Ars Technica",
+      "category": "AI",
+      "image_url": "https://via.placeholder.com/400x200/45B7D1/FFFFFF?text=Tesla+FSD",
+      "published_at": "2024-01-12T16:45:00Z",
+      "created_at": "2024-01-12T16:45:00Z",
+      "updated_at": "2024-01-12T16:45:00Z"
+    },
+    {
+      "id": 5,
+      "title": "Google's Quantum Computer Solves Complex Optimization Problem",
+      "summary": "Google's quantum computer has successfully solved a complex optimization problem that would take classical computers thousands of years, demonstrating quantum supremacy in practical applications.",
+      "content": "Google's latest quantum computer has achieved a breakthrough by solving a complex optimization problem that demonstrates quantum supremacy in real-world applications. The problem, which involves finding optimal configurations for a large-scale logistics network, would require thousands of years to solve on classical computers. Google's quantum processor completed the calculation in just a few hours, representing a significant milestone in quantum computing. The achievement opens up new possibilities for quantum computing in fields such as cryptography, drug discovery, and financial modeling. Google plans to make the quantum processor available to researchers and companies working on optimization problems.",
+      "url": "https://example.com/google-quantum-breakthrough",
+      "source": "MIT Technology Review",
+      "category": "AI",
+      "image_url": "https://via.placeholder.com/400x200/96CEB4/FFFFFF?text=Quantum+Computing",
+      "published_at": "2024-01-11T11:20:00Z",
+      "created_at": "2024-01-11T11:20:00Z",
+      "updated_at": "2024-01-11T11:20:00Z"
+    },
+    {
+      "id": 6,
+      "title": "Meta's Metaverse Platform Sees 50% User Growth",
+      "summary": "Meta's metaverse platform has experienced significant growth with new virtual reality experiences, improved avatar technology, and enhanced social features driving user engagement.",
+      "content": "Meta's metaverse platform has seen remarkable growth, with user engagement increasing by 50% over the past quarter. The growth is driven by several key improvements including more realistic avatar technology, enhanced social features, and a wider variety of virtual experiences. Users can now participate in virtual concerts, attend business meetings in immersive environments, and explore virtual worlds with unprecedented detail and interactivity. The platform has also seen success in the enterprise sector, with companies using it for training, collaboration, and virtual events. Meta continues to invest heavily in the technology, with plans for more advanced haptic feedback and improved VR hardware.",
+      "url": "https://example.com/meta-metaverse-growth",
+      "source": "TechCrunch",
+      "category": "Gadgets",
+      "image_url": "https://via.placeholder.com/400x200/FFEAA7/FFFFFF?text=Metaverse",
+      "published_at": "2024-01-10T08:30:00Z",
+      "created_at": "2024-01-10T08:30:00Z",
+      "updated_at": "2024-01-10T08:30:00Z"
+    },
+    {
+      "id": 7,
+      "title": "New JavaScript Framework Simplifies Web Development",
+      "summary": "A new JavaScript framework called 'Lightning' promises to revolutionize web development with its lightning-fast performance and intuitive API design.",
+      "content": "The web development community is buzzing about 'Lightning', a new JavaScript framework that promises to simplify modern web development while delivering exceptional performance. Lightning features an intuitive API design that reduces boilerplate code by up to 60% compared to traditional frameworks. The framework uses a novel compilation approach that optimizes code at build time, resulting in smaller bundle sizes and faster runtime performance. Developers praise Lightning's excellent TypeScript support, comprehensive testing utilities, and seamless integration with popular build tools. Early benchmarks show Lightning outperforms React and Vue.js in both bundle size and runtime performance.",
+      "url": "https://example.com/lightning-js-framework",
+      "source": "Dev.to",
+      "category": "Software",
+      "image_url": "https://via.placeholder.com/400x200/FDCB6E/FFFFFF?text=Lightning+JS",
+      "published_at": "2024-01-09T13:15:00Z",
+      "created_at": "2024-01-09T13:15:00Z",
+      "updated_at": "2024-01-09T13:15:00Z"
+    },
+    {
+      "id": 8,
+      "title": "Samsung's Foldable Phone Technology Reaches New Heights",
+      "summary": "Samsung's latest foldable phone features a virtually invisible crease and improved durability, setting new standards for flexible display technology.",
+      "content": "Samsung has achieved a major breakthrough in foldable phone technology with their latest device featuring a virtually invisible crease and significantly improved durability. The new flexible display technology uses advanced materials and manufacturing processes that eliminate the visible crease that has been a limitation of previous foldable devices. The phone can withstand over 200,000 fold cycles without degradation, addressing durability concerns that have plagued the foldable phone market. Samsung has also improved the hinge mechanism to provide a more satisfying folding experience and better protection for the display. The device represents a significant step forward in the evolution of mobile device form factors.",
+      "url": "https://example.com/samsung-foldable-breakthrough",
+      "source": "Engadget",
+      "category": "Gadgets",
+      "image_url": "https://via.placeholder.com/400x200/DDA0DD/FFFFFF?text=Samsung+Foldable",
+      "published_at": "2024-01-08T15:45:00Z",
+      "created_at": "2024-01-08T15:45:00Z",
+      "updated_at": "2024-01-08T15:45:00Z"
+    }
+  ],
+  "categories": [
+    "AI",
+    "Gadgets", 
+    "Software",
+    "Mobile",
+    "Web Development",
+    "Hardware",
+    "Security",
+    "Cloud Computing"
+  ],
+  "users": [
+    {
+      "id": 1,
+      "email": "demo@techpulse.app",
+      "name": "Demo User",
+      "role": "citizen",
+      "created_at": "2024-01-01T00:00:00Z"
+    }
+  ],
+  "favorites": [
+    {
+      "id": 1,
+      "user_id": 1,
+      "article_id": 1,
+      "created_at": "2024-01-15T10:30:00Z"
+    },
+    {
+      "id": 2,
+      "user_id": 1,
+      "article_id": 3,
+      "created_at": "2024-01-14T14:45:00Z"
+    }
+  ],
+  "metadata": {
+    "version": "1.0.0",
+    "last_updated": "2024-01-15T10:00:00Z",
+    "total_articles": 8,
+    "description": "Fallback data for TechPulse API when database is unavailable"
+  }
+}

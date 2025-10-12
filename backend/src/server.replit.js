@@ -1,6 +1,6 @@
 const express = require('express');
 const cors = require('cors');
-const { testConnection, initializeDatabase } = require('./config/database');
+const { initializeReplitDatabase, createTables, testReplitConnection, closeDatabase } = require('./config/database.replit');
 const cronService = require('./services/cronService');
 require('dotenv').config();
 
@@ -8,7 +8,6 @@ require('dotenv').config();
 const authRoutes = require('./routes/authRoutes');
 const articleRoutes = require('./routes/articleRoutes');
 const favoriteRoutes = require('./routes/favoriteRoutes');
-const testRoutes = require('./routes/testRoutes');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -30,6 +29,7 @@ app.use(cors({
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With']
 }));
+
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true }));
 
@@ -47,6 +47,7 @@ app.get('/health', (req, res) => {
     uptime: process.uptime(),
     environment: process.env.NODE_ENV || 'development',
     port: PORT,
+    database: 'sqlite',
     replit: {
       replId: process.env.REPL_ID || null,
       replOwner: process.env.REPL_OWNER || null,
@@ -60,10 +61,21 @@ app.use('/api/auth', authRoutes);
 app.use('/api/articles', articleRoutes);
 app.use('/api/favorites', favoriteRoutes);
 
-// Test routes (only in development)
-if (process.env.NODE_ENV !== 'production') {
-  app.use('/api/test', testRoutes);
-}
+// Root endpoint
+app.get('/', (req, res) => {
+  res.json({
+    message: '🚀 TexhPulze API Server',
+    version: '1.0.0',
+    endpoints: {
+      health: '/health',
+      auth: '/api/auth',
+      articles: '/api/articles',
+      favorites: '/api/favorites'
+    },
+    documentation: 'https://github.com/iam-dglory/TechPulse',
+    replit: process.env.REPL_ID ? `https://${process.env.REPL_ID}.${process.env.REPL_OWNER}.repl.co` : null
+  });
+});
 
 // Error handling middleware
 app.use((err, req, res, next) => {
@@ -84,22 +96,29 @@ app.use('*', (req, res) => {
 // Start server
 const startServer = async () => {
   try {
+    console.log('🚀 Starting TexhPulze Backend Server...');
+    console.log(`📦 Environment: ${process.env.NODE_ENV || 'development'}`);
+    
+    // Initialize SQLite database
+    await initializeReplitDatabase();
+    
     // Test database connection
-    const dbConnected = await testConnection();
-    if (!dbConnected) {
-      console.error('Failed to connect to database. Exiting...');
-      process.exit(1);
+    await testReplitConnection();
+    
+    // Create database tables
+    await createTables();
+
+    // Start cron jobs (optional for Replit)
+    try {
+      cronService.start();
+      console.log('⏰ Cron jobs started');
+    } catch (cronError) {
+      console.log('⚠️  Cron jobs not started (optional):', cronError.message);
     }
-
-    // Initialize database tables
-    await initializeDatabase();
-
-    // Start cron jobs
-    cronService.start();
 
     // Start listening
     app.listen(PORT, () => {
-      console.log(`✅ TechPulse backend running on PORT: ${PORT}`);
+      console.log(`✅ TexhPulze backend running on PORT: ${PORT}`);
       console.log(`🌐 Environment: ${process.env.NODE_ENV || 'development'}`);
       console.log(`📊 Health check: http://localhost:${PORT}/health`);
       console.log(`🔗 API base URL: http://localhost:${PORT}/api`);
@@ -109,24 +128,47 @@ const startServer = async () => {
         console.log(`🔗 Replit URL: https://${process.env.REPL_ID}.${process.env.REPL_OWNER}.repl.co`);
         console.log(`📱 Mobile app can connect to: https://${process.env.REPL_ID}.${process.env.REPL_OWNER}.repl.co/api`);
       }
+      
+      console.log('🎉 Server is ready to handle requests!');
     });
   } catch (error) {
-    console.error('Failed to start server:', error);
+    console.error('❌ Failed to start server:', error);
     process.exit(1);
   }
 };
 
 // Handle graceful shutdown
-process.on('SIGTERM', () => {
+process.on('SIGTERM', async () => {
   console.log('SIGTERM received. Shutting down gracefully...');
-  cronService.stop();
+  try {
+    cronService.stop();
+    await closeDatabase();
+  } catch (error) {
+    console.error('Error during shutdown:', error);
+  }
   process.exit(0);
 });
 
-process.on('SIGINT', () => {
+process.on('SIGINT', async () => {
   console.log('SIGINT received. Shutting down gracefully...');
-  cronService.stop();
+  try {
+    cronService.stop();
+    await closeDatabase();
+  } catch (error) {
+    console.error('Error during shutdown:', error);
+  }
   process.exit(0);
+});
+
+// Handle uncaught exceptions
+process.on('uncaughtException', (error) => {
+  console.error('Uncaught Exception:', error);
+  process.exit(1);
+});
+
+process.on('unhandledRejection', (reason, promise) => {
+  console.error('Unhandled Rejection at:', promise, 'reason:', reason);
+  process.exit(1);
 });
 
 startServer();

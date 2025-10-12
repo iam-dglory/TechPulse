@@ -1,0 +1,38 @@
+# Replit configuration for TexhPulze Full Stack App
+
+# Run the backend automatically when Replit starts
+run = "cd backend; npm start"
+
+# Set the main file to backend server
+entrypoint = "backend/src/server.replit.js"
+
+# Environment variables for Replit
+[env]
+NODE_ENV = "development"
+PORT = "3000"
+REPL_ID = "$REPL_ID"
+REPL_OWNER = "$REPL_OWNER"
+REPL_SLUG = "$REPL_SLUG"
+
+# Git configuration
+[git]
+# Enable Git integration
+enabled = true
+
+# Nix configuration
+[nix]
+channel = "stable-22_11"
+
+# Deploy configuration
+[deploy]
+# Enable deployment to Replit Deployments
+enabled = true
+# Auto-deploy on push to main branch
+autoDeploy = true
+
+# Development settings
+[dev]
+# Hot reload settings
+hotReload = true
+# Auto-install dependencies
+autoInstall = true
