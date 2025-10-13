@@ -452,6 +452,37 @@ app.get('/api/posts', async (req, res) => {
   }
 });
 
+// Get single post by ID
+app.get('/api/posts/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    if (pool) {
+      const result = await pool.query(
+        'SELECT * FROM posts WHERE id = $1',
+        [id]
+      );
+
+      if (result.rows.length === 0) {
+        return res.status(404).json({ error: 'Post not found' });
+      }
+
+      res.json(result.rows[0]);
+    } else {
+      // Fallback to in-memory
+      const post = findPostById(id);
+      if (!post) {
+        return res.status(404).json({ error: 'Post not found' });
+      }
+
+      res.json(post);
+    }
+  } catch (error) {
+    console.error('Get post error:', error);
+    res.status(500).json({ error: 'Failed to fetch post' });
+  }
+});
+
 app.post('/api/posts', authenticateToken, async (req, res) => {
   try {
     const { title, content, type, category, criticality, ai_risk_score, government_action, location, tags } = req.body;
@@ -468,7 +499,7 @@ app.post('/api/posts', authenticateToken, async (req, res) => {
         [title, content, type, category, criticality, ai_risk_score, government_action, location, tags, req.user.user_id]
       );
 
-      res.json(result.rows[0]);
+      res.json({ success: true, post: result.rows[0] });
     } else {
       // Fallback to in-memory
       const post = {
@@ -490,7 +521,7 @@ app.post('/api/posts', authenticateToken, async (req, res) => {
       };
 
       posts.push(post);
-      res.json(post);
+      res.json({ success: true, post: post });
     }
   } catch (error) {
     console.error('Post creation error:', error);
@@ -501,10 +532,13 @@ app.post('/api/posts', authenticateToken, async (req, res) => {
 app.post('/api/posts/:id/vote', authenticateToken, async (req, res) => {
   try {
     const { id } = req.params;
-    const { vote_type } = req.body; // 'up' or 'down'
+    const { vote_type, vote } = req.body; // Accept both 'vote_type' and 'vote'
+    
+    // Support both field names for compatibility
+    const voteType = vote_type || vote;
 
-    if (!['up', 'down'].includes(vote_type)) {
-      return res.status(400).json({ error: 'Invalid vote type' });
+    if (!['up', 'down'].includes(voteType)) {
+      return res.status(400).json({ error: 'Invalid vote type. Must be "up" or "down"' });
     }
 
     if (pool) {
@@ -521,20 +555,27 @@ app.post('/api/posts/:id/vote', authenticateToken, async (req, res) => {
       // Insert vote
       await pool.query(
         'INSERT INTO votes (user_id, post_id, vote_type) VALUES ($1, $2, $3)',
-        [req.user.user_id, id, vote_type]
+        [req.user.user_id, id, voteType]
       );
 
       // Update post vote counts
-      const voteChange = vote_type === 'up' ? 1 : -1;
+      const voteChange = voteType === 'up' ? 1 : -1;
       await pool.query(
         'UPDATE posts SET votes_up = votes_up + $1, votes_down = votes_down + $2 WHERE id = $3',
-        [vote_type === 'up' ? 1 : 0, vote_type === 'down' ? 1 : 0, id]
+        [voteType === 'up' ? 1 : 0, voteType === 'down' ? 1 : 0, id]
       );
 
       // Update hot score
       await updateHotScore(id);
 
-      res.json({ success: true });
+      // Get updated post with vote counts
+      const updatedPost = await pool.query('SELECT votes_up, votes_down FROM posts WHERE id = $1', [id]);
+      
+      res.json({ 
+        success: true, 
+        votes_up: updatedPost.rows[0].votes_up,
+        votes_down: updatedPost.rows[0].votes_down
+      });
     } else {
       // Fallback to in-memory
       const post = findPostById(id);
@@ -542,7 +583,7 @@ app.post('/api/posts/:id/vote', authenticateToken, async (req, res) => {
         return res.status(404).json({ error: 'Post not found' });
       }
 
-      if (vote_type === 'up') {
+      if (voteType === 'up') {
         post.votes_up++;
       } else {
         post.votes_down++;
@@ -552,7 +593,11 @@ app.post('/api/posts/:id/vote', authenticateToken, async (req, res) => {
       const timeDiff = (Date.now() - new Date(post.created_at)) / (1000 * 60 * 60); // hours
       post.hot_score = (post.votes_up - post.votes_down) / Math.max(timeDiff, 1);
 
-      res.json({ success: true });
+      res.json({ 
+        success: true, 
+        votes_up: post.votes_up,
+        votes_down: post.votes_down
+      });
     }
   } catch (error) {
     console.error('Vote error:', error);
