@@ -1,16 +1,15 @@
 import axios, { AxiosInstance, AxiosResponse, AxiosError } from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Toast from 'react-native-toast-message';
-
-const API_URL = process.env.API_URL || 'https://texhpulze.onrender.com/api';
+import { getApiBaseUrl } from '../config/app';
 
 class ApiService {
   private api: AxiosInstance;
   private baseURL: string;
 
   constructor() {
-    // Production API URL for TexhPulze on Render
-    this.baseURL = API_URL;
+    // Get API URL from app configuration
+    this.baseURL = getApiBaseUrl();
     this.api = axios.create({
       baseURL: this.baseURL,
       timeout: 10000,
@@ -86,7 +85,8 @@ class ApiService {
   // Health check endpoint
   async checkHealth(): Promise<any> {
     try {
-      const response: AxiosResponse<any> = await axios.get('https://texhpulze.onrender.com/health', {
+      const baseUrl = this.baseURL.replace('/api', '');
+      const response: AxiosResponse<any> = await axios.get(`${baseUrl}/health`, {
         timeout: 10000,
       });
       
@@ -118,17 +118,174 @@ class ApiService {
     return response.data;
   }
 
+  // Companies endpoints
+  async getCompanies(params?: {
+    search?: string;
+    sector?: string;
+    ethicsScoreMin?: number;
+    fundingStage?: string;
+    page?: number;
+    limit?: number;
+  }): Promise<any> {
+    const response: AxiosResponse<any> = await this.api.get('/companies', { params });
+    return response.data;
+  }
+
+  async getCompanyById(id: string): Promise<any> {
+    const response: AxiosResponse<any> = await this.api.get(`/companies/${id}`);
+    return response.data;
+  }
+
+  async getCompanyBySlug(slug: string): Promise<any> {
+    const response: AxiosResponse<any> = await this.api.get(`/companies/slug/${slug}`);
+    return response.data;
+  }
+
+  async claimCompany(companyData: any): Promise<any> {
+    const response: AxiosResponse<any> = await this.api.post('/companies/claim', companyData);
+    return response.data;
+  }
+
+  // Stories endpoints
+  async getStories(params?: {
+    sectorTag?: string;
+    companyId?: string;
+    impactTag?: string;
+    sort?: 'hot' | 'new' | 'top';
+    recommendedFor?: string;
+    page?: number;
+    limit?: number;
+  }): Promise<any> {
+    const response: AxiosResponse<any> = await this.api.get('/stories', { params });
+    return response.data;
+  }
+
+  async getStoryById(id: string): Promise<any> {
+    const response: AxiosResponse<any> = await this.api.get(`/stories/${id}`);
+    return response.data;
+  }
+
+  async getStoryDiscussions(storyId: string): Promise<any> {
+    const response: AxiosResponse<any> = await this.api.get(`/stories/${storyId}/discussions`);
+    return response.data;
+  }
+
+  async voteOnStory(storyId: string, voteData: {
+    voteValue: 'helpful' | 'harmful' | 'neutral';
+    comment?: string;
+    industry?: string;
+  }): Promise<any> {
+    const response: AxiosResponse<any> = await this.api.post(`/stories/${storyId}/vote`, voteData);
+    return response.data;
+  }
+
+  async getBriefs(): Promise<any> {
+    const response: AxiosResponse<any> = await this.api.get('/stories/briefs');
+    return response.data;
+  }
+
+  // Graveyard endpoints
+  async getGraveyardEntries(params?: {
+    search?: string;
+    failureType?: string;
+    companyId?: string;
+    published?: boolean;
+    page?: number;
+    limit?: number;
+    sortBy?: string;
+    sortOrder?: string;
+  }): Promise<any> {
+    const response: AxiosResponse<any> = await this.api.get('/graveyard', { params });
+    return response.data;
+  }
+
+  async getGraveyardEntry(id: string): Promise<any> {
+    const response: AxiosResponse<any> = await this.api.get(`/graveyard/${id}`);
+    return response.data;
+  }
+
+  async getGraveyardStats(): Promise<any> {
+    const response: AxiosResponse<any> = await this.api.get('/graveyard/stats');
+    return response.data;
+  }
+
+  // ELI5 endpoints
+  async getELI5(storyId: string, mode: 'simple' | 'technical' | 'both' = 'both'): Promise<any> {
+    const response: AxiosResponse<any> = await this.api.get(`/stories/${storyId}/eli5`, {
+      params: { mode }
+    });
+    return response.data;
+  }
+
+  async generateELI5(storyId: string, mode: 'simple' | 'technical' | 'both' = 'both'): Promise<any> {
+    const response: AxiosResponse<any> = await this.api.post(`/stories/${storyId}/eli5`, { mode });
+    return response.data;
+  }
+
+  async clearELI5(storyId: string): Promise<any> {
+    const response: AxiosResponse<any> = await this.api.delete(`/stories/${storyId}/eli5`);
+    return response.data;
+  }
+
+  // ELI5 Suggestions endpoints
+  async getELI5Suggestions(params?: {
+    storyId?: string;
+    status?: string;
+    mode?: string;
+    page?: number;
+    limit?: number;
+  }): Promise<any> {
+    const response: AxiosResponse<any> = await this.api.get('/eli5-suggestions', { params });
+    return response.data;
+  }
+
+  async createELI5Suggestion(data: {
+    storyId: string;
+    mode: 'simple' | 'technical';
+    suggestedText: string;
+    explanation?: string;
+  }): Promise<any> {
+    const response: AxiosResponse<any> = await this.api.post('/eli5-suggestions', data);
+    return response.data;
+  }
+
+  async voteOnELI5Suggestion(suggestionId: string, voteType: 'upvote' | 'downvote'): Promise<any> {
+    const response: AxiosResponse<any> = await this.api.post(`/eli5-suggestions/${suggestionId}/vote`, { voteType });
+    return response.data;
+  }
+
+  async updateELI5Suggestion(suggestionId: string, data: { status: 'approved' | 'rejected'; reviewNotes?: string }): Promise<any> {
+    const response: AxiosResponse<any> = await this.api.put(`/eli5-suggestions/${suggestionId}`, data);
+    return response.data;
+  }
+
+  // Daily Briefs endpoints
+  async getDailyBrief(params?: {
+    userId?: string;
+    duration?: '5' | '10' | '15';
+    mode?: 'personalized' | 'trending' | 'balanced';
+    limit?: number;
+  }): Promise<any> {
+    const response: AxiosResponse<any> = await this.api.get('/briefs/daily', { params });
+    return response.data;
+  }
+
+  async getBriefStats(): Promise<any> {
+    const response: AxiosResponse<any> = await this.api.get('/briefs/stats');
+    return response.data;
+  }
+
   // Fetch-based methods (as requested)
   async getPosts(): Promise<any> {
-    return fetch(`${API_URL}/posts`).then(r => r.json());
+    return fetch(`${this.baseURL}/posts`).then(r => r.json());
   }
 
   async getPostById(id: number): Promise<any> {
-    return fetch(`${API_URL}/posts/${id}`).then(r => r.json());
+    return fetch(`${this.baseURL}/posts/${id}`).then(r => r.json());
   }
 
   async createPost(payload: any): Promise<any> {
-    return fetch(`${API_URL}/posts`, {
+    return fetch(`${this.baseURL}/posts`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(payload)
@@ -136,7 +293,7 @@ class ApiService {
   }
 
   async votePost(id: number, voteType: string): Promise<any> {
-    return fetch(`${API_URL}/posts/${id}/vote`, {
+    return fetch(`${this.baseURL}/posts/${id}/vote`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ vote: voteType })

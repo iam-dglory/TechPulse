@@ -1,0 +1,46 @@
+# LingoPods Embedded Dependencies
+# ===============================
+
+# For Raspberry Pi Zero
+# ---------------------
+# System dependencies (install with apt):
+# sudo apt-get install python3-pip python3-dev portaudio19-dev
+# sudo apt-get install espeak festival espeak-data
+
+# Python dependencies
+pyaudio>=0.2.11
+whisper>=20231117
+googletrans==4.0.0rc1
+pyttsx3>=2.90
+RPi.GPIO>=0.7.1
+argostranslate>=1.9.0
+numpy>=1.21.0
+
+# For ESP32 (MicroPython)
+# -----------------------
+# Install via upip in MicroPython:
+# import upip
+# upip.install('urequests')
+# upip.install('ujson')
+
+# Built-in MicroPython modules:
+# - machine (GPIO, I2S, PWM)
+# - network (WiFi)
+# - socket (HTTP requests)
+# - json (JSON handling)
+# - time (timing functions)
+
+# Hardware-specific notes:
+# - ESP32: No external Python packages needed beyond urequests
+# - Raspberry Pi: Full Python environment with all packages
+# - Both: Require proper hardware connections for I2S audio
+
+
+
+
+
+
+
+
+
+

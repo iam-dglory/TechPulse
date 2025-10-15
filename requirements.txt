@@ -1,0 +1,20 @@
+# LingoPods Core Dependencies
+# ===========================
+
+# Audio recording and processing
+pyaudio>=0.2.11
+numpy>=1.21.0
+
+# Speech-to-text (Whisper)
+openai-whisper>=20231117
+
+# Translation
+googletrans==4.0.0rc1
+
+# Text-to-speech
+pyttsx3>=2.90
+
+# Additional utilities
+wave
+tempfile
+typing

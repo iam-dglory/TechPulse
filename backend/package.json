@@ -11,7 +11,30 @@
     "replit": "node src/server.replit.js",
     "test": "jest",
     "test:watch": "jest --watch",
-    "test:coverage": "jest --coverage"
+    "test:coverage": "jest --coverage",
+    "test:backend": "jest --testPathPattern=tests/ --verbose",
+    "test:scoring": "ts-node tests/run-tests.ts scoring",
+    "test:integration": "jest --testPathPattern=controllers/ --verbose",
+    "test:all": "ts-node tests/run-tests.ts all",
+    "typeorm": "typeorm-ts-node-commonjs",
+    "typeorm:migrate": "npm run typeorm migration:run",
+    "typeorm:migrate:generate": "npm run typeorm migration:generate",
+    "typeorm:migrate:revert": "npm run typeorm migration:revert",
+    "build": "tsc",
+    "dev:ts": "ts-node src/server.ts",
+    "dev:ts:watch": "nodemon --exec ts-node src/server.ts",
+    "seed": "ts-node scripts/seed.ts",
+    "seed:prod": "node dist/scripts/seed.js",
+    "test:seed": "ts-node scripts/test-seed.ts",
+    "test:impact-api": "ts-node scripts/test-impact-api.ts",
+    "test:claims": "ts-node scripts/test-claim-workflow.ts",
+    "lint": "echo 'Linting not configured' && exit 0",
+    "type-check": "tsc --noEmit",
+    "test:coverage": "jest --coverage",
+    "typeorm:migrate:revert": "typeorm migration:revert -d ormconfig.ts",
+    "worker": "node dist/worker/index.js",
+    "worker:dev": "ts-node src/worker/index.ts",
+    "worker:watch": "nodemon --exec ts-node src/worker/index.ts"
   },
   "keywords": [
     "tech",
@@ -35,21 +58,51 @@
     "mysql2": "^3.6.0",
     "node-cron": "^3.0.0",
     "pg": "^8.16.3",
-    "sqlite3": "^5.1.6"
+    "sqlite3": "^5.1.6",
+    "typeorm": "^0.3.20",
+    "reflect-metadata": "^0.2.1",
+    "uuid": "^9.0.1",
+    "express-validator": "^7.0.1",
+    "openai": "^4.0.0",
+    "bullmq": "^4.0.0",
+    "ioredis": "^5.0.0",
+    "@sentry/node": "^7.91.0",
+    "@segment/analytics-node": "^3.0.0",
+    "posthog-node": "^3.0.0"
   },
   "devDependencies": {
     "jest": "^29.7.0",
+    "ts-jest": "^29.1.0",
+    "@types/jest": "^29.5.0",
+    "@types/supertest": "^6.0.0",
     "nodemon": "^3.0.0",
-    "supertest": "^6.3.0"
+    "supertest": "^6.3.0",
+    "typescript": "^5.3.0",
+    "@types/node": "^20.10.0",
+    "@types/bcrypt": "^5.0.2",
+    "@types/jsonwebtoken": "^9.0.5",
+    "@types/uuid": "^9.0.7",
+    "@types/node-cron": "^3.0.11",
+    "ts-node": "^10.9.0"
   },
   "jest": {
+    "preset": "ts-jest",
     "testEnvironment": "node",
     "testMatch": [
+      "**/tests/**/*.test.ts",
       "**/tests/**/*.test.js"
     ],
     "collectCoverageFrom": [
+      "src/**/*.ts",
       "src/**/*.js",
-      "!src/server.js"
-    ]
+      "!src/server.ts",
+      "!src/server.js",
+      "!src/**/*.d.ts"
+    ],
+    "setupFilesAfterEnv": ["<rootDir>/tests/setup.ts"],
+    "moduleNameMapping": {
+      "^@/(.*)$": "<rootDir>/src/$1"
+    },
+    "testTimeout": 30000
   }
 }
