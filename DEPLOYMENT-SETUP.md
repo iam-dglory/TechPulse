@@ -68,7 +68,7 @@ Source: Snyk dashboard (https://app.snyk.io/account)
 
 ```
 Description: Slack webhook for build notifications
-Example: https://hooks.slack.com/services/T00000000/B00000000/XXXXXXXXXXXXXXXXXXXXXXXX
+Example: https://hooks.slack.com/services/YOUR_WORKSPACE_ID/YOUR_CHANNEL_ID/YOUR_WEBHOOK_TOKEN
 Source: Slack app configuration
 ```
 
