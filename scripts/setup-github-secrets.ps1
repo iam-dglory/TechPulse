@@ -55,7 +55,7 @@ Write-Host ""
 
 # Optional secrets
 Prompt-Secret -VarName "SNYK_TOKEN" -Description "Snyk security scanning token (optional)" -Example "xxxxxxxx"
-Prompt-Secret -VarName "SLACK_WEBHOOK" -Description "Slack webhook for notifications (optional)" -Example "https://hooks.slack.com/..."
+Prompt-Secret -VarName "SLACK_WEBHOOK" -Description "Slack webhook for notifications (optional)" -Example "https://hooks.slack.com/services/YOUR_WORKSPACE/YOUR_CHANNEL/YOUR_TOKEN"
 Prompt-Secret -VarName "GOOGLE_SERVICE_ACCOUNT_KEY" -Description "Google Play service account JSON (optional)" -Example '{"type": "service_account", ...}'
 
 Write-Host ""

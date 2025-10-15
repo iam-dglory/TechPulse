@@ -54,7 +54,7 @@ echo ""
 
 # Optional secrets
 prompt_secret "SNYK_TOKEN" "Snyk security scanning token (optional)" "xxxxxxxx"
-prompt_secret "SLACK_WEBHOOK" "Slack webhook for notifications (optional)" "https://hooks.slack.com/..."
+prompt_secret "SLACK_WEBHOOK" "Slack webhook for notifications (optional)" "https://hooks.slack.com/services/YOUR_WORKSPACE/YOUR_CHANNEL/YOUR_TOKEN"
 prompt_secret "GOOGLE_SERVICE_ACCOUNT_KEY" "Google Play service account JSON (optional)" '{"type": "service_account", ...}'
 
 echo ""
