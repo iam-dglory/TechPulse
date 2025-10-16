@@ -27,7 +27,7 @@ export interface ApiConfig {
  * Or run: npm run setup:local
  */
 const DEVELOPMENT_CONFIG: ApiConfig = {
-  baseUrl: "http://192.168.X.X:8090/api", // Replace with your local IP
+  baseUrl: "http://192.168.1.100:8090/api", // Replace with your local IP
   timeout: 10000,
   retryAttempts: 3,
 };
