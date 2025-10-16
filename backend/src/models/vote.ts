@@ -40,6 +40,9 @@ export class Vote {
   @Column({ type: 'text', nullable: true })
   comment: string;
 
+  @Column({ type: 'uuid', nullable: true })
+  expertId: string; // References Expert.id for expert votes
+
   @CreateDateColumn()
   createdAt: Date;
 

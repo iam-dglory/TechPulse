@@ -1,0 +1,11 @@
+company_name,cik,ticker,industry,sector
+Apple Inc.,0000320193,AAPL,Technology,Consumer Electronics
+Microsoft Corporation,0000789019,MSFT,Technology,Software
+Amazon.com Inc.,0001018724,AMZN,Technology,E-commerce
+Alphabet Inc.,0001652044,GOOGL,Technology,Internet Services
+Tesla Inc.,0001318605,TSLA,Automotive,Electric Vehicles
+Meta Platforms Inc.,0001326801,META,Technology,Social Media
+NVIDIA Corporation,0001045810,NVDA,Technology,Semiconductors
+Netflix Inc.,0001065280,NFLX,Technology,Streaming Services
+Salesforce Inc.,0001108524,CRM,Technology,Cloud Software
+PayPal Holdings Inc.,0001633917,PYPL,Financial Services,Digital Payments

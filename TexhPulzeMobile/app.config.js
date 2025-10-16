@@ -29,9 +29,9 @@ export default {
       favicon: "./assets/favicon.png"
     },
     extra: {
-      apiBaseUrl: process.env.API_BASE_URL || "https://texhpulze.onrender.com/api",
+      apiBaseUrl: "http://localhost:8090/api",
       eas: {
-        projectId: "58ff0db1-03bb-4613-8cbb-00cbf5daa4a3"
+        projectId: "YOUR_EAS_PROJECT_ID"
       }
     },
     plugins: [],

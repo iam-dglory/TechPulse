@@ -252,3 +252,6 @@ export type UserRecommendationUpdate = Database['public']['Tables']['user_recomm
 
 
 
+
+
+

@@ -1,4 +1,5 @@
 import Constants from 'expo-constants';
+import { getApiBaseUrl as getApiBaseUrlFromConfig } from './api';
 
 /**
  * App configuration utility for accessing environment variables and app settings
@@ -16,7 +17,7 @@ export function getAppConfig(): AppConfig {
   const extra = Constants.expoConfig?.extra || {};
   
   return {
-    apiBaseUrl: extra.apiBaseUrl || 'https://texhpulze.onrender.com/api',
+    apiBaseUrl: getApiBaseUrlFromConfig(),
     environment: __DEV__ ? 'development' : 'production',
     debug: __DEV__,
   };
@@ -26,7 +27,7 @@ export function getAppConfig(): AppConfig {
  * Get API base URL from app configuration
  */
 export function getApiBaseUrl(): string {
-  return getAppConfig().apiBaseUrl;
+  return getApiBaseUrlFromConfig();
 }
 
 /**

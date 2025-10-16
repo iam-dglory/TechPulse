@@ -1,0 +1,45 @@
+# Web Scraping Dependencies
+aiohttp==3.9.1
+beautifulsoup4==4.12.2
+scrapy==2.11.0
+requests==2.31.0
+lxml==4.9.3
+
+# Database Dependencies
+asyncpg==0.29.0
+psycopg2-binary==2.9.9
+sqlalchemy==2.0.23
+
+# Data Processing and Validation
+pandas==2.1.4
+pydantic==2.5.2
+numpy==1.24.3
+
+# Async and Concurrency
+asyncio-throttle==1.0.2
+
+# Logging and Monitoring
+structlog==23.2.0
+
+# Scheduling
+schedule==1.2.0
+
+# HTTP Client Enhancements
+urllib3==2.1.0
+httpx==0.25.2
+
+# XML/HTML Parsing
+xmltodict==0.13.0
+
+# Environment and Configuration
+python-dotenv==1.0.0
+
+# Testing (optional)
+pytest==7.4.3
+pytest-asyncio==0.21.1
+pytest-mock==3.12.0
+
+# Development Tools (optional)
+black==23.11.0
+flake8==6.1.0
+mypy==1.7.1

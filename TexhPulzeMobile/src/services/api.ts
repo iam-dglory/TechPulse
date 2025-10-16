@@ -1,7 +1,7 @@
 import axios, { AxiosInstance, AxiosResponse, AxiosError } from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Toast from 'react-native-toast-message';
-import { getApiBaseUrl } from '../config/app';
+import { getApiBaseUrl, getApiTimeout, getApiRetryAttempts, isDevelopment, DEV_UTILS } from '../config/api';
 
 class ApiService {
   private api: AxiosInstance;
@@ -12,13 +12,18 @@ class ApiService {
     this.baseURL = getApiBaseUrl();
     this.api = axios.create({
       baseURL: this.baseURL,
-      timeout: 10000,
+      timeout: getApiTimeout(),
       headers: {
         'Content-Type': 'application/json',
       },
     });
 
     this.setupInterceptors();
+    
+    // Log configuration in development
+    if (isDevelopment()) {
+      DEV_UTILS.logConfig();
+    }
   }
 
   private setupInterceptors() {

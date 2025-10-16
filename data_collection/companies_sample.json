@@ -1,0 +1,72 @@
+[
+  {
+    "name": "Apple Inc.",
+    "cik": "0000320193",
+    "ticker": "AAPL",
+    "industry": "Technology",
+    "sector": "Consumer Electronics"
+  },
+  {
+    "name": "Microsoft Corporation",
+    "cik": "0000789019",
+    "ticker": "MSFT",
+    "industry": "Technology",
+    "sector": "Software"
+  },
+  {
+    "name": "Amazon.com Inc.",
+    "cik": "0001018724",
+    "ticker": "AMZN",
+    "industry": "Technology",
+    "sector": "E-commerce"
+  },
+  {
+    "name": "Alphabet Inc.",
+    "cik": "0001652044",
+    "ticker": "GOOGL",
+    "industry": "Technology",
+    "sector": "Internet Services"
+  },
+  {
+    "name": "Tesla Inc.",
+    "cik": "0001318605",
+    "ticker": "TSLA",
+    "industry": "Automotive",
+    "sector": "Electric Vehicles"
+  },
+  {
+    "name": "Meta Platforms Inc.",
+    "cik": "0001326801",
+    "ticker": "META",
+    "industry": "Technology",
+    "sector": "Social Media"
+  },
+  {
+    "name": "NVIDIA Corporation",
+    "cik": "0001045810",
+    "ticker": "NVDA",
+    "industry": "Technology",
+    "sector": "Semiconductors"
+  },
+  {
+    "name": "Netflix Inc.",
+    "cik": "0001065280",
+    "ticker": "NFLX",
+    "industry": "Technology",
+    "sector": "Streaming Services"
+  },
+  {
+    "name": "Salesforce Inc.",
+    "cik": "0001108524",
+    "ticker": "CRM",
+    "industry": "Technology",
+    "sector": "Cloud Software"
+  },
+  {
+    "name": "PayPal Holdings Inc.",
+    "cik": "0001633917",
+    "ticker": "PYPL",
+    "industry": "Financial Services",
+    "sector": "Digital Payments"
+  }
+]
