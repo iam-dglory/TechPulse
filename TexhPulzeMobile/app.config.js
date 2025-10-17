@@ -6,41 +6,36 @@ export default {
     orientation: "portrait",
     icon: "./assets/icon.png",
     userInterfaceStyle: "light",
+    newArchEnabled: true,
+    platforms: ["ios", "android", "web"],
     splash: {
       image: "./assets/splash.png",
       resizeMode: "contain",
-      backgroundColor: "#4ECDC4"
+      backgroundColor: "#ffffff"
     },
-    assetBundlePatterns: [
-      "**/*"
-    ],
-    ios: {
-      supportsTablet: true,
-      bundleIdentifier: "com.texhpulze.mobile"
+    updates: { 
+      fallbackToCacheTimeout: 0 
     },
-    android: {
-      adaptiveIcon: {
-        foregroundImage: "./assets/adaptive-icon.png",
-        backgroundColor: "#4ECDC4"
+    assetBundlePatterns: ["**/*"],
+    ios: { 
+      supportsTablet: true 
+    },
+    android: { 
+      adaptiveIcon: { 
+        foregroundImage: "./assets/adaptive-icon.png", 
+        backgroundColor: "#ffffff" 
       },
-      package: "com.texhpulze.mobile"
+      edgeToEdgeEnabled: true,
+      predictiveBackGestureEnabled: false
     },
     web: {
+      bundler: "metro",
       favicon: "./assets/favicon.png"
     },
-    extra: {
-      apiBaseUrl: "http://localhost:8090/api",
-      eas: {
-        projectId: "YOUR_EAS_PROJECT_ID"
-      }
-    },
-    plugins: [],
-    scheme: "texhpulze",
-    updates: {
-      url: "https://u.expo.dev/texhpulze-mobile-project"
-    },
-    runtimeVersion: {
-      policy: "sdkVersion"
+    extra: { 
+      eas: { 
+        projectId: "58ff0db1-03bb-4613-8cbb-00cbf5daa4a3" 
+      } 
     }
   }
 };
