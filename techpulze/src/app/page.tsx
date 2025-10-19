@@ -6,10 +6,10 @@ export default function Home() {
       <div className="container mx-auto px-4 py-16">
         <div className="text-center mb-16">
           <h1 className="text-6xl font-bold text-gray-900 dark:text-white mb-4">
-            TechPulze
+            TexhPulze
           </h1>
           <p className="text-xl text-gray-600 dark:text-gray-300 mb-8 max-w-2xl mx-auto">
-            Track tech companies and their ethical impact. Stay informed about the latest developments 
+            Track tech companies and their ethical impact. Stay informed about the latest developments
             in AI, EV, IoT, and HealthTech with our comprehensive ethical scoring system.
           </p>
           <div className="flex gap-4 justify-center">

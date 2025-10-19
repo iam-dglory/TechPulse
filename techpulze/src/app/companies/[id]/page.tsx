@@ -1,19 +1,19 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { useParams } from 'next/navigation'
-import { Company } from '@/types/database'
+import { useParams, useRouter } from 'next/navigation'
+import { Company, VoteType } from '@/types/database'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion'
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog'
-import { 
-  CheckCircle, 
-  Building2, 
-  TrendingUp, 
-  Package, 
-  Users, 
+import {
+  CheckCircle,
+  Building2,
+  TrendingUp,
+  Package,
+  Users,
   Star,
   Shield,
   Bot,
@@ -24,17 +24,23 @@ import {
 } from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'
+import { VotingInterface } from '@/components/voting/VotingInterface'
+import { supabase } from '@/lib/supabase'
 
 interface CompanyProfileProps {
   params: { id: string }
 }
 
 export default function CompanyProfilePage({ params }: CompanyProfileProps) {
+  const router = useRouter()
   const [company, setCompany] = useState<Company | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const [reviews, setReviews] = useState<any[]>([])
   const [averageRating, setAverageRating] = useState(0)
+  const [userId, setUserId] = useState<string | undefined>()
+  const [userVotes, setUserVotes] = useState<any>(null)
+  const [userWeight, setUserWeight] = useState(1.0)
 
   useEffect(() => {
     const fetchCompany = async () => {
@@ -45,17 +51,60 @@ export default function CompanyProfilePage({ params }: CompanyProfileProps) {
         }
         const data = await response.json()
         setCompany(data.company)
-        
+
         // Fetch reviews
         const reviewsResponse = await fetch(`/api/companies/${params.id}/reviews`)
         if (reviewsResponse.ok) {
           const reviewsData = await reviewsResponse.json()
           setReviews(reviewsData.reviews || [])
-          
+
           // Calculate average rating
           if (reviewsData.reviews && reviewsData.reviews.length > 0) {
             const total = reviewsData.reviews.reduce((sum: number, review: any) => sum + review.rating, 0)
             setAverageRating(total / reviewsData.reviews.length)
+          }
+        }
+
+        // Get user session
+        const { data: { session } } = await supabase.auth.getSession()
+        const uid = session?.user?.id
+        setUserId(uid)
+
+        // Fetch user votes if authenticated
+        if (uid) {
+          const { data: votes } = await supabase
+            .from('votes')
+            .select('vote_type, score, comment, evidence_urls')
+            .eq('user_id', uid)
+            .eq('company_id', params.id)
+
+          if (votes && votes.length > 0) {
+            const votesMap = votes.reduce((acc, vote) => ({
+              ...acc,
+              [vote.vote_type]: {
+                score: vote.score,
+                comment: vote.comment,
+                evidence_urls: vote.evidence_urls,
+              },
+            }), {})
+            setUserVotes(votesMap)
+          }
+
+          // Fetch user profile for vote weight
+          const { data: profile } = await supabase
+            .from('user_profiles')
+            .select('reputation_score, is_expert')
+            .eq('id', uid)
+            .single()
+
+          if (profile) {
+            const reputation = profile.reputation_score || 0
+            let weight = 1.0
+            if (profile.is_expert) weight = 2.0
+            else if (reputation >= 1000) weight = 1.5
+            else if (reputation >= 500) weight = 1.3
+            else if (reputation >= 100) weight = 1.1
+            setUserWeight(weight)
           }
         }
       } catch (err) {
@@ -370,6 +419,30 @@ export default function CompanyProfilePage({ params }: CompanyProfileProps) {
                 )}
               </CardContent>
             </Card>
+
+            {/* Voting Interface */}
+            <div className="mt-8">
+              <VotingInterface
+                companyId={params.id}
+                companyName={company.name}
+                currentScores={{
+                  ethics: company.ethics_score || 5,
+                  credibility: company.credibility_score || 5,
+                  delivery: company.delivery_score || 5,
+                  security: company.security_score || 5,
+                  innovation: company.innovation_score || 5,
+                }}
+                userPreviousVotes={userVotes || undefined}
+                userId={userId}
+                userWeight={userWeight}
+                onVoteSubmitted={() => {
+                  // Refresh company data after vote submission
+                  router.refresh()
+                  // Optionally refetch company data
+                  window.location.reload()
+                }}
+              />
+            </div>
           </div>
 
           {/* Sidebar */}
