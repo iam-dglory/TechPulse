@@ -3,9 +3,10 @@ import { supabase } from '@/lib/supabase'
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id } = await params
     const { data: reviews, error } = await supabase
       .from('reviews')
       .select(`
@@ -16,7 +17,7 @@ export async function GET(
           role
         )
       `)
-      .eq('company_id', params.id)
+      .eq('company_id', id)
       .eq('moderation_status', 'approved')
       .order('created_at', { ascending: false })
 
@@ -34,16 +35,17 @@ export async function GET(
 
 export async function POST(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id } = await params
     const body = await request.json()
-    
+
     const { data: review, error } = await supabase
       .from('reviews')
       .insert({
         ...body,
-        company_id: params.id
+        company_id: id
       })
       .select(`
         *,
