@@ -129,3 +129,12 @@ export function CompanyCard({ company }: CompanyCardProps) {
 
 
 
+
+
+
+
+
+
+
+
+

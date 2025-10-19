@@ -168,3 +168,12 @@ INSERT INTO news_updates (headline, summary, sector, company_id, ethical_impact_
 
 
 
+
+
+
+
+
+
+
+
+
