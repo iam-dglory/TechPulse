@@ -1,26 +1,40 @@
 {
-  "name": "texhpulze-simple",
+  "name": "techpulse-evaluator",
   "version": "1.0.0",
-  "description": "Simple TexhPulze server for testing",
-  "main": "simple-server.js",
+  "private": true,
   "scripts": {
-    "start": "node simple-server.js",
-    "dev": "node simple-server.js"
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "type-check": "tsc --noEmit",
+    "api:dev": "cd api && python -m uvicorn main:app --reload --host 0.0.0.0 --port 8000",
+    "api:install": "cd api && pip install -r requirements.txt",
+    "setup": "npm install && npm run api:install",
+    "dev:full": "concurrently \"npm run dev\" \"npm run api:dev\""
   },
   "dependencies": {
-    "@emotion/react": "^11.14.0",
-    "@emotion/styled": "^11.14.1",
-    "@react-native-picker/picker": "^2.11.2",
-    "cors": "^2.8.5",
-    "express": "^4.18.0",
-    "framer-motion": "^12.23.24",
-    "recharts": "^3.2.1"
+    "next": "14.0.4",
+    "react": "^18",
+    "react-dom": "^18",
+    "clsx": "^2.0.0",
+    "tailwind-merge": "^2.2.0",
+    "lucide-react": "^0.303.0"
   },
-  "keywords": [
-    "tech",
-    "news",
-    "api"
-  ],
-  "author": "",
-  "license": "ISC"
+  "devDependencies": {
+    "typescript": "^5",
+    "@types/node": "^20",
+    "@types/react": "^18",
+    "@types/react-dom": "^18",
+    "autoprefixer": "^10.0.1",
+    "postcss": "^8",
+    "tailwindcss": "^3.3.0",
+    "eslint": "^8",
+    "eslint-config-next": "14.0.4",
+    "concurrently": "^8.2.2"
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=8.0.0"
+  }
 }

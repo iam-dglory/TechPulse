@@ -1,253 +1,237 @@
-# TechPulse 🌐
+# TechPulse Ethics Evaluator
 
-**World's First Public Grievance & Discussion Platform for Technology**
+A comprehensive platform for evaluating company ethics, credibility, and social responsibility. Built with Next.js (App Router) + TypeScript frontend and FastAPI backend.
 
-TechPulse combines the power of AI news aggregation with community-driven technology grievance reporting and discussion forums. It empowers citizens, researchers, policymakers, and governments to report, discuss, and categorize technology risks using AI-powered tools.
+## Features
 
-## 🎯 **Core Features**
+- **Comprehensive Ethics Evaluation**: Assess companies across three key dimensions:
+  - Ethical Practices (40% weight)
+  - Credibility (30% weight) 
+  - Social Responsibility (30% weight)
 
-### 📰 **AI News Aggregation** (Existing)
-- Multi-source tech news from NewsAPI, Guardian, Dev.to, Hacker News
-- Real-time article updates and categorization
-- Search and filtering by AI, Gadgets, Software, Programming, Startups
-- Personalized news feed with favorites system
+- **Data-Driven Scoring**: Objective metrics and industry best practices
+- **Actionable Insights**: Specific, prioritized recommendations for improvement
+- **Modern UI**: Beautiful, responsive interface built with TailwindCSS
+- **REST API**: FastAPI backend with comprehensive endpoints
 
-### 🚨 **Technology Grievances** (New)
-- **Report Tech Issues**: Citizens can report technology-related problems
-- **AI Risk Categorization**: Automatic classification of grievances by risk level
-- **Government Integration**: Direct reporting to relevant authorities
-- **Research Database**: Anonymous data for researchers and policymakers
+## Tech Stack
 
-### 💬 **Community Discussions** (New)
-- **Reddit-like Forums**: Technology discussion boards
-- **Expert Panels**: Verified researchers and policymakers
-- **Citizen Voices**: Community-driven technology discussions
-- **Policy Discussions**: Government-policy maker interactions
+### Frontend
+- **Next.js 14** with App Router
+- **TypeScript** for type safety
+- **TailwindCSS** for styling
+- **Lucide React** for icons
+- **Custom UI Components** with shadcn/ui patterns
 
-### 👥 **Multi-User Ecosystem** (New)
-- **Citizens**: Report issues, participate in discussions
-- **Researchers**: Access anonymized data, conduct studies
-- **Policymakers**: Monitor trends, engage with community
-- **Governments**: Direct grievance tracking, policy responses
+### Backend
+- **FastAPI** for high-performance API
+- **Pydantic** for data validation
+- **Python 3.8+** for backend logic
+- **Uvicorn** for ASGI server
 
-### 💰 **Premium Features** (New)
-- **Premium Subscriptions**: Advanced analytics and insights
-- **Earning Opportunities**: Revenue sharing for quality content
-- **Priority Support**: Faster grievance processing
-- **Advanced AI Tools**: Enhanced categorization and insights
-
-## 🏗️ **Architecture**
+## Project Structure
 
 ```
-TechPulse/
-├── mobile/                    # React Native app
-│   ├── src/
-│   │   ├── screens/          # App screens
-│   │   │   ├── News/         # AI News (existing)
-│   │   │   ├── Grievances/   # Grievance reporting
-│   │   │   ├── Community/    # Discussion forums
-│   │   │   ├── Premium/      # Subscription features
-│   │   │   └── Profile/      # User management
-│   │   ├── components/       # Reusable UI components
-│   │   ├── services/         # API services
-│   │   └── context/          # State management
-├── backend/                   # Node.js + Express API
-│   ├── src/
-│   │   ├── controllers/      # Route handlers
-│   │   ├── models/          # Database models
-│   │   ├── services/        # AI categorization, news aggregation
-│   │   └── middleware/      # Auth, role-based access
-├── ai-services/              # AI/ML services
-│   ├── risk-categorization/  # Grievance risk analysis
-│   ├── content-moderation/   # Community content filtering
-│   └── trend-analysis/       # Technology trend insights
-└── admin-panel/              # Government/Policymaker dashboard
-    ├── grievance-management/ # Track and respond to grievances
-    ├── analytics/           # Community insights
-    └── policy-tools/        # Policy development tools
+techpulse-evaluator/
+├── src/                    # Next.js frontend
+│   ├── app/               # App Router pages
+│   │   ├── page.tsx       # Home page
+│   │   ├── evaluate/      # Evaluation page
+│   │   └── about/         # About page
+│   └── components/        # React components
+├── components/            # Shared UI components
+│   └── ui/               # Base UI components
+├── lib/                  # Shared utilities and types
+│   ├── types.ts         # TypeScript type definitions
+│   ├── api.ts           # API client
+│   ├── utils.ts         # Utility functions
+│   └── constants.ts     # App constants
+├── api/                 # FastAPI backend
+│   ├── main.py         # FastAPI app and routes
+│   ├── models.py       # Pydantic models
+│   ├── evaluator.py    # Ethics evaluation logic
+│   └── requirements.txt # Python dependencies
+└── README.md
 ```
 
-## 🎨 **User Interface**
+## Getting Started
 
-### **Mobile App Screens:**
-1. **News Feed** - AI-curated technology news
-2. **Report Grievance** - Submit technology issues
-3. **Community** - Discussion forums and threads
-4. **My Reports** - Track submitted grievances
-5. **Premium** - Subscription and earning features
-6. **Profile** - User settings and role management
+### Prerequisites
 
-### **Admin Dashboard:**
-1. **Grievance Management** - Review and categorize reports
-2. **Community Moderation** - Monitor discussions
-3. **Analytics** - Technology trend insights
-4. **Policy Tools** - Government response system
+- Node.js 18+ and npm
+- Python 3.8+
+- pip (Python package manager)
 
-## 🔧 **Technology Stack**
-
-### **Frontend (Mobile)**
-- **React Native** - Cross-platform mobile development
-- **TypeScript** - Type-safe development
-- **React Navigation** - Screen navigation
-- **React Native Reanimated** - Smooth animations
-- **AsyncStorage** - Local data persistence
-
-### **Backend**
-- **Node.js + Express** - API server
-- **MySQL** - Primary database
-- **Redis** - Caching and sessions
-- **JWT** - Authentication
-- **Socket.io** - Real-time updates
-
-### **AI/ML Services**
-- **OpenAI API** - Content categorization
-- **TensorFlow.js** - Risk assessment models
-- **NLP Processing** - Text analysis and sentiment
-
-### **Infrastructure**
-- **Docker** - Containerization
-- **AWS/DigitalOcean** - Cloud deployment
-- **Nginx** - Reverse proxy
-- **Cloudflare** - CDN and security
-
-## 🚀 **Getting Started**
-
-### **Prerequisites**
-- Node.js 18+
-- MySQL 8.0+
-- React Native development environment
-- Docker (optional)
-
-### **Installation**
+### Installation
 
 1. **Clone the repository**
+   ```bash
+   git clone <repository-url>
+   cd techpulse-evaluator
+   ```
+
+2. **Install frontend dependencies**
+   ```bash
+   npm install
+   ```
+
+3. **Install backend dependencies**
+   ```bash
+   cd api
+   pip install -r requirements.txt
+   cd ..
+   ```
+
+4. **Set up environment variables**
+   ```bash
+   cp env.example .env.local
+   # Edit .env.local with your configuration
+   ```
+
+### Running the Application
+
+1. **Start the FastAPI backend**
+   ```bash
+   cd api
+   python -m uvicorn main:app --reload --host 0.0.0.0 --port 8000
+   ```
+
+2. **Start the Next.js frontend** (in a new terminal)
+   ```bash
+   npm run dev
+   ```
+
+3. **Access the application**
+   - Frontend: http://localhost:3000
+   - Backend API: http://localhost:8000
+   - API Documentation: http://localhost:8000/docs
+
+## API Endpoints
+
+### Core Endpoints
+
+- `GET /` - API health check
+- `GET /health` - Detailed health status
+- `POST /evaluate` - Evaluate company ethics
+- `GET /evaluation-criteria` - Get evaluation criteria
+
+### Example API Usage
+
 ```bash
-git clone https://github.com/iam-dglory/TechPulse.git
-cd TechPulse
+# Evaluate a company
+curl -X POST "http://localhost:8000/evaluate" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "company_name": "Example Corp",
+    "company_data": {
+      "company_name": "Example Corp",
+      "industry": "Technology",
+      "size": "Large (201-1000 employees)",
+      "has_code_of_conduct": true,
+      "whistleblower_protection": true,
+      "anti_corruption_measures": true,
+      "transparency_score": 8.5,
+      "financial_transparency": 7.0,
+      "regulatory_compliance": 9.0,
+      "customer_satisfaction": 8.0,
+      "media_reputation": 7.5,
+      "environmental_sustainability": 6.0,
+      "community_engagement": 7.0,
+      "employee_welfare": 8.5,
+      "diversity_inclusion": 7.0,
+      "recent_controversies": [],
+      "certifications": ["ISO 9001"],
+      "awards": ["Best Place to Work"]
+    }
+  }'
 ```
 
-2. **Backend Setup**
+## Evaluation Methodology
+
+### Scoring Categories
+
+1. **Ethical Practices (40%)**
+   - Code of conduct implementation
+   - Whistleblower protection
+   - Anti-corruption measures
+   - Transparency in operations
+
+2. **Credibility (30%)**
+   - Financial transparency
+   - Regulatory compliance
+   - Customer satisfaction
+   - Media reputation
+
+3. **Social Responsibility (30%)**
+   - Environmental sustainability
+   - Community engagement
+   - Employee welfare
+   - Diversity and inclusion
+
+### Scoring Scale
+
+- **90-100**: Excellent (Grade A+ / A)
+- **80-89**: Good (Grade B+ / B)
+- **70-79**: Fair (Grade C+ / C)
+- **0-69**: Needs Improvement (Grade D / F)
+
+## Development
+
+### Frontend Development
+
 ```bash
-cd backend
-npm install
-cp .env.example .env
-# Configure your environment variables
+# Run development server
 npm run dev
+
+# Build for production
+npm run build
+
+# Start production server
+npm start
+
+# Run linting
+npm run lint
 ```
 
-3. **Mobile App Setup**
+### Backend Development
+
 ```bash
-cd mobile
-npm install
-npx expo start
+# Run with auto-reload
+cd api
+python -m uvicorn main:app --reload
+
+# Run tests (when implemented)
+python -m pytest
+
+# Format code
+black .
 ```
 
-4. **AI Services Setup**
-```bash
-cd ai-services
-pip install -r requirements.txt
-python app.py
-```
+## Contributing
 
-## 📊 **Database Schema**
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
 
-### **Core Tables**
-```sql
--- Users with role-based access
-users (id, email, username, role, subscription_tier, created_at)
+## License
 
--- Technology news articles
-articles (id, title, content, source, category, published_at, created_at)
+This project is licensed under the MIT License - see the LICENSE file for details.
 
--- Grievance reports
-grievances (id, user_id, title, description, category, risk_level, status, created_at)
+## Support
 
--- Community discussions
-discussions (id, user_id, title, content, category, upvotes, created_at)
+For support and questions, please open an issue in the GitHub repository.
 
--- Comments and replies
-comments (id, discussion_id, user_id, content, upvotes, created_at)
+## Roadmap
 
--- Premium subscriptions
-subscriptions (id, user_id, plan_type, status, expires_at, created_at)
-
--- Earning tracking
-earnings (id, user_id, amount, source, status, created_at)
-```
-
-## 💰 **Monetization Model**
-
-### **Premium Subscriptions**
-- **Basic** - Free access to news and basic grievances
-- **Pro** - Advanced analytics, priority support ($9.99/month)
-- **Enterprise** - Government/researcher tools ($49.99/month)
-
-### **Earning Opportunities**
-- **Content Creators** - Revenue sharing for quality discussions
-- **Expert Contributors** - Payment for verified insights
-- **Community Moderators** - Earnings for moderation work
-- **Research Partners** - Data licensing revenue
-
-## 🎯 **Target Users**
-
-### **Primary Users**
-- **Tech Citizens** - Report issues, participate in discussions
-- **Researchers** - Access data, conduct studies
-- **Policymakers** - Monitor trends, engage community
-- **Government Officials** - Track grievances, respond to issues
-
-### **Secondary Users**
-- **Tech Companies** - Monitor public sentiment
-- **Journalists** - Access community insights
-- **Academics** - Research technology impact
-- **Activists** - Organize around tech issues
-
-## 🔒 **Privacy & Security**
-
-- **Data Anonymization** - Personal data protection
-- **Role-based Access** - Secure user permissions
-- **End-to-end Encryption** - Secure communications
-- **GDPR Compliance** - Privacy regulations
-- **Audit Trails** - Complete activity logging
-
-## 📈 **Future Roadmap**
-
-### **Phase 1** (Current)
-- ✅ AI News Aggregation
-- ✅ Basic grievance reporting
-- ✅ Community discussions
-- ✅ User authentication
-
-### **Phase 2** (Next 3 months)
-- 🚧 AI risk categorization
-- 🚧 Premium subscriptions
-- 🚧 Government dashboard
-- 🚧 Mobile app optimization
-
-### **Phase 3** (6 months)
-- 📋 Advanced analytics
-- 📋 Research partnerships
-- 📋 Policy integration tools
-- 📋 International expansion
-
-## 🤝 **Contributing**
-
-We welcome contributions from:
-- **Developers** - Code contributions
-- **Researchers** - Data analysis and insights
-- **Policymakers** - Feature requirements
-- **Citizens** - User feedback and testing
-
-## 📞 **Contact**
-
-- **GitHub**: https://github.com/iam-dglory/TechPulse
-- **Email**: techpulse@iam-dglory.dev
-- **Discord**: [Join our community](https://discord.gg/techpulse)
-
-## 📄 **License**
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
----
-
-**TechPulse** - Empowering technology democracy through AI and community engagement 🌐✨
+- [ ] Database integration for storing evaluations
+- [ ] User authentication and accounts
+- [ ] Evaluation history and tracking
+- [ ] Advanced analytics and reporting
+- [ ] API rate limiting and security
+- [ ] Docker containerization
+- [ ] CI/CD pipeline setup
+- [ ] Unit and integration tests
+- [ ] Performance optimization
+- [ ] Mobile app development
