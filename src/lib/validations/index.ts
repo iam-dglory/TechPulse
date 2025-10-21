@@ -251,6 +251,53 @@ export const companyFilterSchema = z.object({
   employee_count_max: z.number().int().positive().optional(),
 });
 
+/**
+ * Company search query schema (for API)
+ */
+export const companySearchSchema = z.object({
+  query: z
+    .string()
+    .min(1, 'Search query must be at least 1 character')
+    .max(100, 'Search query must not exceed 100 characters')
+    .trim()
+    .optional(),
+
+  industry: IndustryEnum.optional(),
+
+  score_min: z
+    .string()
+    .transform((val) => parseFloat(val))
+    .pipe(z.number().min(0).max(10))
+    .optional(),
+
+  score_max: z
+    .string()
+    .transform((val) => parseFloat(val))
+    .pipe(z.number().min(0).max(10))
+    .optional(),
+
+  verification_tier: VerificationTierEnum.optional(),
+
+  sort: z
+    .enum(['score', 'trending', 'recent', 'name'])
+    .optional()
+    .default('score'),
+
+  limit: z
+    .string()
+    .transform((val) => parseInt(val, 10))
+    .pipe(z.number().int().min(1).max(100))
+    .optional()
+    .default('20'),
+
+  offset: z
+    .string()
+    .transform((val) => parseInt(val, 10))
+    .pipe(z.number().int().min(0))
+    .optional()
+    .default('0'),
+});
+
 // ============================================
 // 3. VOTING SCHEMAS
 // ============================================
@@ -711,6 +758,7 @@ export type UserType = z.infer<typeof UserTypeEnum>;
 // Company Types
 export type CompanyInput = z.infer<typeof companySchema>;
 export type CompanyFilterInput = z.infer<typeof companyFilterSchema>;
+export type CompanySearchInput = z.infer<typeof companySearchSchema>;
 export type Industry = z.infer<typeof IndustryEnum>;
 
 // Voting Types

@@ -171,6 +171,129 @@ export interface Database {
         }
       }
 
+      // Company Scores table
+      company_scores: {
+        Row: {
+          id: string
+          company_id: string
+          overall_score: number
+          ethics_score: number
+          credibility_score: number
+          delivery_score: number
+          security_score: number
+          innovation_score: number
+          growth_rate: number | null
+          verification_tier: 'unverified' | 'basic' | 'verified' | 'premium'
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          company_id: string
+          overall_score?: number
+          ethics_score?: number
+          credibility_score?: number
+          delivery_score?: number
+          security_score?: number
+          innovation_score?: number
+          growth_rate?: number | null
+          verification_tier?: 'unverified' | 'basic' | 'verified' | 'premium'
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          company_id?: string
+          overall_score?: number
+          ethics_score?: number
+          credibility_score?: number
+          delivery_score?: number
+          security_score?: number
+          innovation_score?: number
+          growth_rate?: number | null
+          verification_tier?: 'unverified' | 'basic' | 'verified' | 'premium'
+          updated_at?: string
+        }
+      }
+
+      // Promises table
+      promises: {
+        Row: {
+          id: string
+          company_id: string
+          promise_text: string
+          category: 'product' | 'ethics' | 'sustainability' | 'privacy' | 'security'
+          promised_date: string
+          deadline_date: string
+          source_url: string
+          impact_level: number
+          status: 'pending' | 'in-progress' | 'kept' | 'broken' | 'delayed'
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          company_id: string
+          promise_text: string
+          category: 'product' | 'ethics' | 'sustainability' | 'privacy' | 'security'
+          promised_date: string
+          deadline_date: string
+          source_url: string
+          impact_level: number
+          status?: 'pending' | 'in-progress' | 'kept' | 'broken' | 'delayed'
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          company_id?: string
+          promise_text?: string
+          category?: 'product' | 'ethics' | 'sustainability' | 'privacy' | 'security'
+          promised_date?: string
+          deadline_date?: string
+          source_url?: string
+          impact_level?: number
+          status?: 'pending' | 'in-progress' | 'kept' | 'broken' | 'delayed'
+          created_at?: string
+          updated_at?: string
+        }
+      }
+
+      // Votes table
+      votes: {
+        Row: {
+          id: string
+          user_id: string
+          company_id: string
+          vote_type: 'ethics' | 'credibility' | 'delivery' | 'security' | 'innovation'
+          score: number
+          comment: string | null
+          evidence_url: string | null
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          user_id: string
+          company_id: string
+          vote_type: 'ethics' | 'credibility' | 'delivery' | 'security' | 'innovation'
+          score: number
+          comment?: string | null
+          evidence_url?: string | null
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          user_id?: string
+          company_id?: string
+          vote_type?: 'ethics' | 'credibility' | 'delivery' | 'security' | 'innovation'
+          score?: number
+          comment?: string | null
+          evidence_url?: string | null
+          created_at?: string
+          updated_at?: string
+        }
+      }
+
       // Grievances table
       grievances: {
         Row: {
