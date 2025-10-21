@@ -482,6 +482,86 @@ export interface Database {
           created_at?: string
         }
       }
+
+      // AI Analyses table
+      ai_analyses: {
+        Row: {
+          id: string
+          company_id: string
+          analysis_type: 'transparency' | 'ethics' | 'risk' | 'promise' | 'news' | 'comprehensive'
+          analysis_data: any
+          score: number | null
+          confidence: number | null
+          analyzed_at: string
+          expires_at: string
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          company_id: string
+          analysis_type: 'transparency' | 'ethics' | 'risk' | 'promise' | 'news' | 'comprehensive'
+          analysis_data: any
+          score?: number | null
+          confidence?: number | null
+          analyzed_at?: string
+          expires_at: string
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          company_id?: string
+          analysis_type?: 'transparency' | 'ethics' | 'risk' | 'promise' | 'news' | 'comprehensive'
+          analysis_data?: any
+          score?: number | null
+          confidence?: number | null
+          analyzed_at?: string
+          expires_at?: string
+          created_at?: string
+          updated_at?: string
+        }
+      }
+
+      // AI Insights table
+      ai_insights: {
+        Row: {
+          id: string
+          company_id: string
+          insight_type: 'strength' | 'concern' | 'red_flag' | 'opportunity' | 'risk' | 'positive'
+          title: string
+          description: string
+          severity: 'low' | 'medium' | 'high' | 'critical'
+          source: string
+          confidence: number | null
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          company_id: string
+          insight_type: 'strength' | 'concern' | 'red_flag' | 'opportunity' | 'risk' | 'positive'
+          title: string
+          description: string
+          severity: 'low' | 'medium' | 'high' | 'critical'
+          source: string
+          confidence?: number | null
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          company_id?: string
+          insight_type?: 'strength' | 'concern' | 'red_flag' | 'opportunity' | 'risk' | 'positive'
+          title?: string
+          description?: string
+          severity?: 'low' | 'medium' | 'high' | 'critical'
+          source?: string
+          confidence?: number | null
+          created_at?: string
+          updated_at?: string
+        }
+      }
     }
     Views: {
       [_ in never]: never
