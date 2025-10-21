@@ -145,27 +145,33 @@ export interface Database {
         Row: {
           id: string
           email: string
+          username: string | null
           full_name: string | null
           avatar_url: string | null
           role: 'citizen' | 'researcher' | 'policymaker' | 'government' | 'admin'
+          reputation: number
           created_at: string
           updated_at: string
         }
         Insert: {
           id: string
           email: string
+          username?: string | null
           full_name?: string | null
           avatar_url?: string | null
           role?: 'citizen' | 'researcher' | 'policymaker' | 'government' | 'admin'
+          reputation?: number
           created_at?: string
           updated_at?: string
         }
         Update: {
           id?: string
           email?: string
+          username?: string | null
           full_name?: string | null
           avatar_url?: string | null
           role?: 'citizen' | 'researcher' | 'policymaker' | 'government' | 'admin'
+          reputation?: number
           created_at?: string
           updated_at?: string
         }
@@ -417,6 +423,62 @@ export interface Database {
           id?: string
           user_id?: string
           article_id?: string
+          created_at?: string
+        }
+      }
+
+      // User follows table
+      user_follows: {
+        Row: {
+          id: string
+          user_id: string
+          company_id: string
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          user_id: string
+          company_id: string
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          user_id?: string
+          company_id?: string
+          created_at?: string
+        }
+      }
+
+      // Notifications table
+      notifications: {
+        Row: {
+          id: string
+          user_id: string
+          type: 'vote' | 'promise' | 'company_update' | 'system'
+          title: string
+          message: string
+          link: string | null
+          read: boolean
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          user_id: string
+          type: 'vote' | 'promise' | 'company_update' | 'system'
+          title: string
+          message: string
+          link?: string | null
+          read?: boolean
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          user_id?: string
+          type?: 'vote' | 'promise' | 'company_update' | 'system'
+          title?: string
+          message?: string
+          link?: string | null
+          read?: boolean
           created_at?: string
         }
       }
