@@ -352,6 +352,15 @@ export const voteFilterSchema = z.object({
   user_id: uuidSchema.optional(),
 });
 
+/**
+ * Vote query schema for GET requests
+ */
+export const voteQuerySchema = z.object({
+  company_id: z.string().uuid('Invalid company ID format'),
+  user_id: z.string().uuid('Invalid user ID format').optional(),
+  vote_type: VoteTypeEnum.optional(),
+});
+
 // ============================================
 // 4. PROMISES SCHEMAS
 // ============================================
@@ -765,6 +774,7 @@ export type Industry = z.infer<typeof IndustryEnum>;
 export type VoteInput = z.infer<typeof voteSchema>;
 export type VoteUpdateInput = z.infer<typeof voteUpdateSchema>;
 export type VoteFilterInput = z.infer<typeof voteFilterSchema>;
+export type VoteQueryInput = z.infer<typeof voteQuerySchema>;
 export type VoteType = z.infer<typeof VoteTypeEnum>;
 
 // Promise Types
