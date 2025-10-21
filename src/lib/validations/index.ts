@@ -748,3 +748,84 @@ export type DiscussionInput = z.infer<typeof discussionSchema>;
 export type DiscussionUpdateInput = z.infer<typeof discussionUpdateSchema>;
 export type CommentInput = z.infer<typeof commentSchema>;
 export type DiscussionCategory = z.infer<typeof DiscussionCategoryEnum>;
+
+// ============================================
+// 9. NEWS SCHEMAS
+// ============================================
+
+/**
+ * News creation schema
+ */
+export const newsSchema = z.object({
+  title: z
+    .string()
+    .min(10, 'Title must be at least 10 characters')
+    .max(200, 'Title must not exceed 200 characters')
+    .trim(),
+
+  content: z
+    .string()
+    .min(100, 'Content must be at least 100 characters')
+    .max(10000, 'Content must not exceed 10000 characters')
+    .trim(),
+
+  company_id: uuidSchema.optional().nullable(),
+
+  ethics_impact: z
+    .number()
+    .int('Ethics impact must be an integer')
+    .min(1, 'Ethics impact must be at least 1')
+    .max(10, 'Ethics impact must not exceed 10')
+    .optional()
+    .nullable(),
+
+  source_url: requiredUrlSchema,
+
+  published_at: dateSchema,
+});
+
+/**
+ * News update schema
+ */
+export const newsUpdateSchema = newsSchema.partial();
+
+/**
+ * News query/filter schema
+ */
+export const newsQuerySchema = z.object({
+  limit: z
+    .string()
+    .transform((val) => parseInt(val, 10))
+    .pipe(z.number().int().min(1).max(100))
+    .optional()
+    .default('20'),
+
+  offset: z
+    .string()
+    .transform((val) => parseInt(val, 10))
+    .pipe(z.number().int().min(0))
+    .optional()
+    .default('0'),
+
+  industry: IndustryEnum.optional(),
+
+  impact: z
+    .string()
+    .transform((val) => parseInt(val, 10))
+    .pipe(z.number().int().min(1).max(10))
+    .optional(),
+
+  company_id: uuidSchema.optional(),
+
+  search: z
+    .string()
+    .min(1)
+    .max(100)
+    .trim()
+    .optional(),
+});
+
+// News Types
+export type NewsInput = z.infer<typeof newsSchema>;
+export type NewsUpdateInput = z.infer<typeof newsUpdateSchema>;
+export type NewsQueryInput = z.infer<typeof newsQuerySchema>;

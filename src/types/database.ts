@@ -14,6 +14,89 @@ export type Json =
 export interface Database {
   public: {
     Tables: {
+      // News table
+      news: {
+        Row: {
+          id: string
+          title: string
+          content: string
+          company_id: string | null
+          ethics_impact: number | null
+          source_url: string
+          published_at: string
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          title: string
+          content: string
+          company_id?: string | null
+          ethics_impact?: number | null
+          source_url: string
+          published_at: string
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          title?: string
+          content?: string
+          company_id?: string | null
+          ethics_impact?: number | null
+          source_url?: string
+          published_at?: string
+          created_at?: string
+          updated_at?: string
+        }
+      }
+
+      // Companies table
+      companies: {
+        Row: {
+          id: string
+          name: string
+          slug: string
+          industry: string
+          website: string | null
+          description: string
+          founded_year: number
+          headquarters: string
+          employee_count: number | null
+          logo_url: string | null
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          name: string
+          slug: string
+          industry: string
+          website?: string | null
+          description: string
+          founded_year: number
+          headquarters: string
+          employee_count?: number | null
+          logo_url?: string | null
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          name?: string
+          slug?: string
+          industry?: string
+          website?: string | null
+          description?: string
+          founded_year?: number
+          headquarters?: string
+          employee_count?: number | null
+          logo_url?: string | null
+          created_at?: string
+          updated_at?: string
+        }
+      }
+
       // Articles table
       articles: {
         Row: {
