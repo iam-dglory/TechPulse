@@ -480,6 +480,38 @@ export const promiseFilterSchema = z.object({
   deadline_after: dateSchema.optional(),
 });
 
+/**
+ * Promise query schema for GET requests
+ */
+export const promiseQuerySchema = z.object({
+  company_id: z.string().uuid('Invalid company ID format'),
+  status: PromiseStatusEnum.optional(),
+});
+
+/**
+ * Promise vote verdict enumeration
+ */
+export const PromiseVoteVerdictEnum = z.enum([
+  'kept',
+  'broken',
+  'partial',
+]);
+
+/**
+ * Promise vote schema
+ */
+export const promiseVoteSchema = z.object({
+  promise_id: uuidSchema,
+
+  verdict: PromiseVoteVerdictEnum,
+
+  comment: z
+    .string()
+    .max(500, 'Comment must not exceed 500 characters')
+    .trim()
+    .optional(),
+});
+
 // ============================================
 // 5. REVIEWS SCHEMAS
 // ============================================
@@ -781,8 +813,11 @@ export type VoteType = z.infer<typeof VoteTypeEnum>;
 export type PromiseInput = z.infer<typeof promiseSchema>;
 export type PromiseUpdateInput = z.infer<typeof promiseUpdateSchema>;
 export type PromiseFilterInput = z.infer<typeof promiseFilterSchema>;
+export type PromiseQueryInput = z.infer<typeof promiseQuerySchema>;
 export type PromiseCategory = z.infer<typeof PromiseCategoryEnum>;
 export type PromiseStatus = z.infer<typeof PromiseStatusEnum>;
+export type PromiseVoteInput = z.infer<typeof promiseVoteSchema>;
+export type PromiseVoteVerdict = z.infer<typeof PromiseVoteVerdictEnum>;
 
 // Review Types
 export type ReviewInput = z.infer<typeof reviewSchema>;

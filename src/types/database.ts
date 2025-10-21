@@ -294,6 +294,37 @@ export interface Database {
         }
       }
 
+      // Promise votes table
+      promise_votes: {
+        Row: {
+          id: string
+          promise_id: string
+          user_id: string
+          verdict: 'kept' | 'broken' | 'partial'
+          comment: string | null
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          promise_id: string
+          user_id: string
+          verdict: 'kept' | 'broken' | 'partial'
+          comment?: string | null
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          promise_id?: string
+          user_id?: string
+          verdict?: 'kept' | 'broken' | 'partial'
+          comment?: string | null
+          created_at?: string
+          updated_at?: string
+        }
+      }
+
       // Grievances table
       grievances: {
         Row: {
