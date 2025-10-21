@@ -1,8 +1,8 @@
-# TechPulse 🌐
+# TexhPulze 🌐
 
 **World's First Public Grievance & Discussion Platform for Technology**
 
-TechPulse combines the power of AI news aggregation with community-driven technology grievance reporting and discussion forums. It empowers citizens, researchers, policymakers, and governments to report, discuss, and categorize technology risks using AI-powered tools.
+TexhPulze combines the power of AI news aggregation with community-driven technology grievance reporting and discussion forums. It empowers citizens, researchers, policymakers, and governments to report, discuss, and categorize technology risks using AI-powered tools.
 
 ## 🎯 **Core Features**
 
@@ -39,7 +39,7 @@ TechPulse combines the power of AI news aggregation with community-driven techno
 ## 🏗️ **Architecture**
 
 ```
-TechPulse/
+TexhPulze/
 ├── mobile/                    # React Native app
 │   ├── src/
 │   │   ├── screens/          # App screens

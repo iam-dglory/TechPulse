@@ -1,0 +1,14 @@
+node_modules
+.git
+.cache
+.env.local
+.env*.local
+*.log
+backend
+mobile
+tech-news-app
+TechNewsApp
+deploy.sh
+docker-compose.yml
+Dockerfile.*
+nginx.conf
