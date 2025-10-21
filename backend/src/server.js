@@ -8,14 +8,27 @@ require('dotenv').config();
 const authRoutes = require('./routes/authRoutes');
 const articleRoutes = require('./routes/articleRoutes');
 const favoriteRoutes = require('./routes/favoriteRoutes');
+const testRoutes = require('./routes/testRoutes');
 
 const app = express();
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 3000;
 
-// Middleware
+// Middleware - CORS configuration for Replit and Expo apps
 app.use(cors({
-  origin: process.env.FRONTEND_URL || 'http://localhost:3000',
-  credentials: true
+  origin: [
+    process.env.FRONTEND_URL,
+    'http://localhost:3000',
+    'http://localhost:19006', // Expo web
+    'http://localhost:8081',  // Expo Metro
+    'exp://192.168.*.*:*',    // Expo development
+    /^https:\/\/.*\.replit\.dev$/, // Replit domains
+    /^https:\/\/.*\.repl\.co$/,    // Replit domains
+    process.env.REPLIT_URL,   // Current Replit URL
+    process.env.REPL_ID ? `https://${process.env.REPL_ID}.${process.env.REPL_OWNER}.repl.co` : null
+  ].filter(Boolean),
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With']
 }));
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true }));
@@ -29,9 +42,16 @@ app.use((req, res, next) => {
 // Health check endpoint
 app.get('/health', (req, res) => {
   res.status(200).json({ 
-    status: 'OK', 
+    status: "ok",
     timestamp: new Date().toISOString(),
-    uptime: process.uptime()
+    uptime: process.uptime(),
+    environment: process.env.NODE_ENV || 'development',
+    port: PORT,
+    replit: {
+      replId: process.env.REPL_ID || null,
+      replOwner: process.env.REPL_OWNER || null,
+      replSlug: process.env.REPL_SLUG || null
+    }
   });
 });
 
@@ -39,6 +59,11 @@ app.get('/health', (req, res) => {
 app.use('/api/auth', authRoutes);
 app.use('/api/articles', articleRoutes);
 app.use('/api/favorites', favoriteRoutes);
+
+// Test routes (only in development)
+if (process.env.NODE_ENV !== 'production') {
+  app.use('/api/test', testRoutes);
+}
 
 // Error handling middleware
 app.use((err, req, res, next) => {
@@ -74,9 +99,16 @@ const startServer = async () => {
 
     // Start listening
     app.listen(PORT, () => {
-      console.log(`🚀 Server running on port ${PORT}`);
+      console.log(`✅ TechPulse backend running on PORT: ${PORT}`);
+      console.log(`🌐 Environment: ${process.env.NODE_ENV || 'development'}`);
       console.log(`📊 Health check: http://localhost:${PORT}/health`);
       console.log(`🔗 API base URL: http://localhost:${PORT}/api`);
+      
+      // Replit-specific information
+      if (process.env.REPL_ID) {
+        console.log(`🔗 Replit URL: https://${process.env.REPL_ID}.${process.env.REPL_OWNER}.repl.co`);
+        console.log(`📱 Mobile app can connect to: https://${process.env.REPL_ID}.${process.env.REPL_OWNER}.repl.co/api`);
+      }
     });
   } catch (error) {
     console.error('Failed to start server:', error);

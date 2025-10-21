@@ -1,0 +1,62 @@
+services:
+  # MySQL Database
+  mysql:
+    image: mysql:8.0
+    container_name: texhpulze-mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: texhpulze_root_password_2024
+      MYSQL_DATABASE: texhpulze_db
+      MYSQL_USER: texhpulze_user
+      MYSQL_PASSWORD: texhpulze_password_2024
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./backend/init.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - texhpulze-network
+    healthcheck:
+      test: [ "CMD", "mysqladmin", "ping", "-h", "localhost" ]
+      timeout: 20s
+      retries: 10
+
+  # Backend API
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile.backend
+    container_name: texhpulze-backend
+    restart: unless-stopped
+    environment:
+      NODE_ENV: production
+      PORT: 3000
+      DB_HOST: mysql
+      DB_PORT: 3306
+      DB_USER: texhpulze_user
+      DB_PASSWORD: texhpulze_password_2024
+      DB_NAME: texhpulze_db
+      JWT_SECRET: texhpulze_jwt_secret_key_2024_production
+      NEWSAPI_KEY: cec6bb685eb9419fae97970066c63f5e
+      GUARDIAN_API_KEY: b133fd4e-fb25-42bf-a4ec-e9d25888285d
+    ports:
+      - "3000:3000"
+    depends_on:
+      mysql:
+        condition: service_healthy
+    volumes:
+      - ./backend/data:/app/data
+    networks:
+      - texhpulze-network
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:3000/health" ]
+      timeout: 10s
+      retries: 5
+
+volumes:
+  mysql_data:
+    driver: local
+
+networks:
+  texhpulze-network:
+    driver: bridge

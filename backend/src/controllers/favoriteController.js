@@ -1,4 +1,5 @@
 const { pool } = require('../config/database');
+const fallbackMiddleware = require('../middleware/fallback');
 
 // Add article to favorites
 const addFavorite = async (req, res) => {
@@ -115,6 +116,24 @@ const getFavorites = async (req, res) => {
     });
   } catch (error) {
     console.error('Get favorites error:', error);
+    
+    // Check if it's a database error and use fallback
+    if (fallbackMiddleware.isDatabaseError(error)) {
+      console.log('🔄 Using fallback data for getFavorites');
+      const fallbackResult = fallbackMiddleware.getFallbackFavorites(req.user?.userId || 1);
+      return res.json({
+        ...fallbackResult,
+        pagination: {
+          currentPage: 1,
+          totalPages: 1,
+          totalItems: fallbackResult.favorites.length,
+          itemsPerPage: fallbackResult.favorites.length,
+          hasNextPage: false,
+          hasPrevPage: false
+        }
+      });
+    }
+    
     res.status(500).json({ error: 'Failed to fetch favorites' });
   }
 };

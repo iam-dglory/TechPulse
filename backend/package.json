@@ -1,37 +1,52 @@
 {
-  "name": "tech-news-backend",
+  "name": "texhpulze-backend",
   "version": "1.0.0",
-  "description": "Tech News Aggregator Backend API",
-  "main": "src/server.js",
+  "description": "TexhPulze Backend API - Tech News Aggregator",
+  "main": "src/server.replit.js",
   "scripts": {
-    "start": "node src/server.js",
+    "start": "node src/server.render.js",
     "dev": "nodemon src/server.js",
+    "production": "node src/server.production.js",
+    "render": "node src/server.render.js",
+    "replit": "node src/server.replit.js",
     "test": "jest",
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage"
   },
-  "keywords": ["tech", "news", "api", "nodejs", "express"],
+  "keywords": [
+    "tech",
+    "news",
+    "api",
+    "nodejs",
+    "express"
+  ],
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "express": "^4.18.0",
-    "mysql2": "^3.6.0",
-    "bcrypt": "^5.1.0",
-    "jsonwebtoken": "^9.0.0",
-    "dotenv": "^16.0.0",
-    "cors": "^2.8.5",
     "axios": "^1.6.0",
+    "bcrypt": "^5.1.0",
+    "compression": "^1.8.1",
+    "cors": "^2.8.5",
+    "dotenv": "^16.0.0",
+    "express": "^4.18.0",
+    "express-validator": "^7.0.0",
+    "helmet": "^7.2.0",
+    "jsonwebtoken": "^9.0.0",
+    "mysql2": "^3.6.0",
     "node-cron": "^3.0.0",
-    "express-validator": "^7.0.0"
+    "pg": "^8.16.3",
+    "sqlite3": "^5.1.6"
   },
   "devDependencies": {
     "jest": "^29.7.0",
-    "supertest": "^6.3.0",
-    "nodemon": "^3.0.0"
+    "nodemon": "^3.0.0",
+    "supertest": "^6.3.0"
   },
   "jest": {
     "testEnvironment": "node",
-    "testMatch": ["**/tests/**/*.test.js"],
+    "testMatch": [
+      "**/tests/**/*.test.js"
+    ],
     "collectCoverageFrom": [
       "src/**/*.js",
       "!src/server.js"

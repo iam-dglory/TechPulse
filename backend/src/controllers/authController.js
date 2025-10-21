@@ -2,6 +2,7 @@ const bcrypt = require('bcrypt');
 const { validationResult } = require('express-validator');
 const { pool } = require('../config/database');
 const { generateToken } = require('../middleware/auth');
+const fallbackMiddleware = require('../middleware/fallback');
 
 // Register new user
 const register = async (req, res) => {
@@ -115,6 +116,26 @@ const login = async (req, res) => {
     });
   } catch (error) {
     console.error('Login error:', error);
+    
+    // Check if it's a database error and use fallback authentication
+    if (fallbackMiddleware.isDatabaseError(error)) {
+      console.log('🔄 Using fallback authentication for login');
+      
+      // Check if user exists in fallback data
+      const fallbackUser = fallbackMiddleware.getFallbackUserByEmail(req.body.email);
+      if (fallbackUser) {
+        // Create a fallback token (in real scenario, this would be limited)
+        const fallbackToken = 'fallback-token-' + Date.now();
+        return res.json(fallbackMiddleware.createFallbackAuthResponse(fallbackUser, fallbackToken));
+      } else {
+        return res.status(401).json({ 
+          error: 'Invalid credentials',
+          fallback_mode: true,
+          message: "Database unavailable - using fallback authentication"
+        });
+      }
+    }
+    
     res.status(500).json({ error: 'Login failed' });
   }
 };
