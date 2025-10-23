@@ -13,11 +13,30 @@ export default defineConfig(({ mode }) => {
       outDir: 'dist',
       assetsDir: 'assets',
       sourcemap: false,
+      minify: 'esbuild',
+      cssMinify: true,
       rollupOptions: {
         output: {
-          manualChunks: undefined,
+          manualChunks: {
+            'react-vendor': ['react', 'react-dom', 'react-router-dom'],
+            'supabase-vendor': ['@supabase/supabase-js'],
+          },
+          assetFileNames: (assetInfo) => {
+            const info = assetInfo.name.split('.')
+            const ext = info[info.length - 1]
+            if (/\.(png|jpe?g|svg|gif|tiff|bmp|ico|webp)$/i.test(assetInfo.name)) {
+              return `assets/images/[name]-[hash][extname]`
+            } else if (/\.css$/i.test(assetInfo.name)) {
+              return `assets/css/[name]-[hash][extname]`
+            }
+            return `assets/[name]-[hash][extname]`
+          },
+          chunkFileNames: 'assets/js/[name]-[hash].js',
+          entryFileNames: 'assets/js/[name]-[hash].js',
         },
       },
+      chunkSizeWarningLimit: 1000,
+      reportCompressedSize: true,
     },
     server: {
       proxy: {
@@ -27,6 +46,10 @@ export default defineConfig(({ mode }) => {
           secure: false,
         },
       },
+    },
+    // Performance optimizations
+    optimizeDeps: {
+      include: ['react', 'react-dom', 'react-router-dom', '@supabase/supabase-js'],
     },
     // Make env variables available
     define: {

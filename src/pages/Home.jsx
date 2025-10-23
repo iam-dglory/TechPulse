@@ -41,7 +41,7 @@ function Home() {
   return (
     <div className="home-page">
       {/* Hero Section */}
-      <section className="hero">
+      <section className="hero" aria-label="Hero section">
         <div className="hero-content">
           <h1>Welcome to TexhPulze</h1>
           <p className="hero-subtitle">
@@ -55,13 +55,15 @@ function Home() {
       </section>
 
       {/* Category Filter */}
-      <section className="category-filter">
+      <section className="category-filter" aria-label="Category filter">
         <div className="container">
           <h2>Browse by Category</h2>
-          <div className="category-buttons">
+          <div className="category-buttons" role="group" aria-label="Category selection">
             <button
               className={selectedCategory === 'all' ? 'active' : ''}
               onClick={() => setSelectedCategory('all')}
+              aria-pressed={selectedCategory === 'all'}
+              aria-label="Show all categories"
             >
               All
             </button>
@@ -70,6 +72,8 @@ function Home() {
                 key={cat}
                 className={selectedCategory === cat ? 'active' : ''}
                 onClick={() => setSelectedCategory(cat)}
+                aria-pressed={selectedCategory === cat}
+                aria-label={`Filter by ${cat} category`}
               >
                 {cat}
               </button>
@@ -79,21 +83,21 @@ function Home() {
       </section>
 
       {/* Articles Section */}
-      <section className="articles-section">
+      <section className="articles-section" id="main-content" aria-label="Latest tech news">
         <div className="container">
           <h2>Latest Tech News</h2>
 
           {loading && (
-            <div className="loading">
-              <div className="spinner"></div>
+            <div className="loading" role="status" aria-live="polite">
+              <div className="spinner" aria-hidden="true"></div>
               <p>Loading articles...</p>
             </div>
           )}
 
           {error && (
-            <div className="error-message">
+            <div className="error-message" role="alert" aria-live="assertive">
               <p>{error}</p>
-              <button onClick={fetchArticles}>Try Again</button>
+              <button onClick={fetchArticles} aria-label="Retry loading articles">Try Again</button>
             </div>
           )}
 
@@ -105,35 +109,44 @@ function Home() {
 
           {!loading && !error && articles.length > 0 && (
             <div className="articles-grid">
-              {articles.map((article) => (
-                <div key={article.id} className="article-card">
+              {articles.map((article, index) => (
+                <article key={article.id} className="article-card">
                   {article.image_url && (
                     <div className="article-image">
-                      <img src={article.image_url} alt={article.title} />
+                      <img
+                        src={article.image_url}
+                        alt={`Featured image for ${article.title}`}
+                        loading={index < 6 ? "eager" : "lazy"}
+                        decoding="async"
+                        onError={(e) => {
+                          e.target.style.display = 'none';
+                        }}
+                      />
                     </div>
                   )}
                   <div className="article-content">
                     <div className="article-meta">
-                      <span className="category">{article.category}</span>
-                      <span className="source">{article.source}</span>
+                      <span className="category" aria-label={`Category: ${article.category}`}>{article.category}</span>
+                      <span className="source" aria-label={`Source: ${article.source}`}>{article.source}</span>
                     </div>
                     <h3>{article.title}</h3>
                     <p className="article-description">{article.description}</p>
                     <div className="article-footer">
-                      <span className="date">
+                      <time className="date" dateTime={article.published_at} aria-label={`Published on ${new Date(article.published_at).toLocaleDateString()}`}>
                         {new Date(article.published_at).toLocaleDateString()}
-                      </span>
+                      </time>
                       <a
                         href={article.url}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="read-more"
+                        aria-label={`Read more about ${article.title} (opens in new tab)`}
                       >
                         Read More →
                       </a>
                     </div>
                   </div>
-                </div>
+                </article>
               ))}
             </div>
           )}
@@ -141,7 +154,7 @@ function Home() {
       </section>
 
       {/* Features Section */}
-      <section className="features-section">
+      <section className="features-section" aria-label="Core features">
         <div className="container">
           <h2>Core Features</h2>
           <div className="features-grid">
