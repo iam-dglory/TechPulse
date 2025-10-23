@@ -1,0 +1,21 @@
+{
+  "name": "TexhPulze - Technology Grievance Platform",
+  "short_name": "TexhPulze",
+  "description": "World's First Public Grievance & Discussion Platform for Technology",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#3b82f6",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["news", "technology", "productivity"],
+  "lang": "en-US",
+  "dir": "ltr"
+}

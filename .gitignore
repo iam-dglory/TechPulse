@@ -69,7 +69,13 @@ dist
 
 # Gatsby files
 .cache/
-public
+# Allow specific public files for Vite
+!public/robots.txt
+!public/sitemap.xml
+!public/favicon.svg
+!public/manifest.json
+!public/_headers
+!public/_redirects
 
 # Storybook build outputs
 .out
@@ -154,3 +160,4 @@ build/
 dist/
 *.tar.gz
 *.zip
+.vercel

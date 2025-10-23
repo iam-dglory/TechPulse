@@ -1,0 +1,10 @@
+# https://www.robotstxt.org/robotstxt.html
+User-agent: *
+Allow: /
+
+# Sitemaps
+Sitemap: https://www.texhpulze.com/sitemap.xml
+
+# Disallow admin or private areas (add as needed)
+# Disallow: /admin/
+# Disallow: /private/
