@@ -23,7 +23,9 @@ app.use(cors({
     'http://localhost:3000',
     'http://localhost:3001',
     'https://texhpulze.onrender.com',
-    'https://texhpulze-frontend.onrender.com'
+    'https://texhpulze-frontend.onrender.com',
+    'https://www.texhpulze.com',
+    'https://texhpulze.com'
   ],
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
@@ -605,18 +607,35 @@ app.post('/api/posts/:id/vote', authenticateToken, async (req, res) => {
   }
 });
 
+// Global error handler
+app.use((err, req, res, next) => {
+  console.error('❌ Unhandled error:', err);
+  console.error('Error stack:', err.stack);
+  res.status(500).json({
+    error: 'Internal server error',
+    message: process.env.NODE_ENV === 'development' ? err.message : undefined
+  });
+});
+
+// 404 handler
+app.use((req, res) => {
+  console.log(`⚠️  404 Not Found: ${req.method} ${req.url}`);
+  res.status(404).json({ error: 'Route not found', path: req.url });
+});
+
 // Initialize database and start server
 const startServer = async () => {
   try {
     console.log('🚀 Starting TexhPulze Render Server...');
     console.log(`📍 Environment: ${process.env.NODE_ENV || 'development'}`);
     console.log(`🔗 DATABASE_URL: ${process.env.DATABASE_URL ? 'Present' : 'Not found'}`);
-    
+    console.log(`🌐 Allowed origins: ${['http://localhost:3000', 'http://localhost:3001', 'https://texhpulze.onrender.com', 'https://texhpulze-frontend.onrender.com', 'https://www.texhpulze.com', 'https://texhpulze.com'].join(', ')}`);
+
     // Test database connection
     let dbConnected = false;
     try {
       dbConnected = await testConnection();
-      
+
       if (dbConnected) {
         console.log('✅ PostgreSQL Database Connected');
         await initializeDatabase();
@@ -626,7 +645,7 @@ const startServer = async () => {
       console.error('❌ Database initialization failed:', dbError.message);
       dbConnected = false;
     }
-    
+
     if (!dbConnected) {
       console.log('🔄 Running in fallback mode with in-memory data');
       console.log('📝 Note: Data will not persist between restarts');
@@ -635,10 +654,16 @@ const startServer = async () => {
     app.listen(PORT, '0.0.0.0', () => {
       console.log('🚀 TexhPulze Render Server Started!');
       console.log(`✅ Server running on port: ${PORT}`);
-      console.log(`🌐 Frontend: https://texhpulze.onrender.com`);
-      console.log(`📊 Health check: https://texhpulze.onrender.com/health`);
+      console.log(`🌐 Production frontend: https://www.texhpulze.com`);
+      console.log(`📊 Health check: http://localhost:${PORT}/health`);
       console.log(`🗄️  Database: ${dbConnected ? 'PostgreSQL Connected' : 'Fallback Mode'}`);
       console.log(`🔒 SSL: ${process.env.NODE_ENV === 'production' ? 'Enabled' : 'Disabled'}`);
+      console.log(`🔑 API endpoints:`);
+      console.log(`   - GET  /health`);
+      console.log(`   - POST /api/auth/register`);
+      console.log(`   - POST /api/auth/login`);
+      console.log(`   - GET  /api/posts`);
+      console.log(`   - POST /api/posts`);
       console.log('================================');
     });
   } catch (error) {
