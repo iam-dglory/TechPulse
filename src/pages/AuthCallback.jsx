@@ -7,6 +7,7 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
+import SEO from '../components/SEO';
 
 function AuthCallback() {
   const navigate = useNavigate();
@@ -62,7 +63,14 @@ function AuthCallback() {
   }, [navigate]);
 
   return (
-    <div style={styles.container}>
+    <>
+      <SEO
+        title="Email Confirmation - TexhPulze"
+        description="Confirming your email address for TexhPulze account"
+        noindex={true}
+        nofollow={true}
+      />
+      <div style={styles.container}>
       <div style={styles.card}>
         {status === 'processing' && (
           <>
@@ -89,6 +97,7 @@ function AuthCallback() {
         )}
       </div>
     </div>
+    </>
   );
 }
 

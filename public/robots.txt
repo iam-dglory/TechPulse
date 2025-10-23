@@ -1,10 +1,70 @@
+# TexhPulze - Robots.txt
 # https://www.robotstxt.org/robotstxt.html
+
+# Allow all search engines to crawl the site
 User-agent: *
 Allow: /
 
+# Disallow authentication callback (no SEO value)
+Disallow: /auth/callback
+Disallow: /auth/*
+
+# Disallow any admin or private areas (future-proofing)
+Disallow: /admin/
+Disallow: /api/
+Disallow: /private/
+
+# Disallow specific file types that shouldn't be indexed
+Disallow: /*.json$
+Disallow: /*.xml$
+Disallow: /*.yml$
+
+# Allow CSS and JS for better rendering
+Allow: /assets/*.css
+Allow: /assets/*.js
+Allow: /assets/*.svg
+Allow: /assets/*.png
+Allow: /assets/*.jpg
+Allow: /assets/*.webp
+
+# Crawl delay (optional, uncomment if needed)
+# Crawl-delay: 1
+
 # Sitemaps
 Sitemap: https://www.texhpulze.com/sitemap.xml
+Sitemap: https://texhpulze.com/sitemap.xml
 
-# Disallow admin or private areas (add as needed)
-# Disallow: /admin/
-# Disallow: /private/
+# Specific bot rules
+
+# Google
+User-agent: Googlebot
+Allow: /
+
+# Bing
+User-agent: Bingbot
+Allow: /
+
+# Yahoo
+User-agent: Slurp
+Allow: /
+
+# DuckDuckGo
+User-agent: DuckDuckBot
+Allow: /
+
+# Yandex
+User-agent: Yandex
+Allow: /
+
+# Block bad bots
+User-agent: AhrefsBot
+Disallow: /
+
+User-agent: SemrushBot
+Disallow: /
+
+User-agent: MJ12bot
+Disallow: /
+
+User-agent: dotbot
+Disallow: /

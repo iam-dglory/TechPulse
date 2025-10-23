@@ -1,6 +1,44 @@
+import SEO from '../components/SEO';
+
 function About() {
+  // Structured data for About page
+  const structuredData = {
+    "@context": "https://schema.org",
+    "@type": "AboutPage",
+    "name": "About TexhPulze",
+    "description": "Learn about TexhPulze, the world's first public grievance and discussion platform for technology, empowering citizens, researchers, policymakers, and governments.",
+    "url": "https://www.texhpulze.com/about",
+    "mainEntity": {
+      "@type": "Organization",
+      "name": "TexhPulze",
+      "alternateName": "TechPulze",
+      "url": "https://www.texhpulze.com",
+      "logo": "https://www.texhpulze.com/favicon.svg",
+      "description": "World's First Public Grievance & Discussion Platform for Technology",
+      "foundingDate": "2025",
+      "contactPoint": {
+        "@type": "ContactPoint",
+        "email": "support@texhpulze.com",
+        "contactType": "Customer Support",
+        "availableLanguage": "English"
+      },
+      "sameAs": [
+        "https://twitter.com/texhpulze",
+        "https://linkedin.com/company/texhpulze",
+        "https://github.com/texhpulze"
+      ]
+    }
+  };
+
   return (
     <div className="about-page">
+      <SEO
+        title="About TexhPulze - Technology Grievance Platform | Mission & Vision"
+        description="Discover TexhPulze's mission to democratize technology governance. Learn how our AI-powered platform empowers citizens to report tech issues, engage in discussions, and shape technology policy. Multi-source news aggregation, community forums, and direct government integration."
+        keywords="about texhpulze, technology governance, tech democracy, AI news platform, technology grievances, tech policy platform, community technology forum, technology accountability"
+        type="website"
+        structuredData={structuredData}
+      />
       <section className="page-hero">
         <div className="container">
           <h1>About TexhPulze</h1>

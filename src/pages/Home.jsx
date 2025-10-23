@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import api from '../services/api';
+import SEO from '../components/SEO';
 
 function Home() {
   const [articles, setArticles] = useState([]);
@@ -38,8 +39,38 @@ function Home() {
     }
   };
 
+  // Structured data for homepage
+  const structuredData = {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "name": "TexhPulze",
+    "alternateName": "TechPulze",
+    "url": "https://www.texhpulze.com",
+    "description": "World's First Public Grievance & Discussion Platform for Technology",
+    "publisher": {
+      "@type": "Organization",
+      "name": "TexhPulze",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://www.texhpulze.com/favicon.svg"
+      }
+    },
+    "potentialAction": {
+      "@type": "SearchAction",
+      "target": "https://www.texhpulze.com/search?q={search_term_string}",
+      "query-input": "required name=search_term_string"
+    }
+  };
+
   return (
     <div className="home-page">
+      <SEO
+        title="TexhPulze - World's First Technology Grievance & Discussion Platform"
+        description="Empowering citizens, researchers, policymakers, and governments to report, discuss, and categorize technology risks using AI-powered tools. Get real-time tech news, report grievances, and join community discussions."
+        keywords="technology news, tech grievances, AI news aggregation, technology platform, tech discussion, government tech, technology risks, tech policy, community forum, tech democracy, AI-powered news"
+        image="https://www.texhpulze.com/og-image.jpg"
+        structuredData={structuredData}
+      />
       {/* Hero Section */}
       <section className="hero" aria-label="Hero section">
         <div className="hero-content">

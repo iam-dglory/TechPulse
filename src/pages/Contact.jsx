@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import SEO from '../components/SEO';
 
 function Contact() {
   const [formData, setFormData] = useState({
@@ -27,8 +28,43 @@ function Contact() {
     });
   };
 
+  // Structured data for Contact page
+  const structuredData = {
+    "@context": "https://schema.org",
+    "@type": "ContactPage",
+    "name": "Contact TexhPulze",
+    "description": "Get in touch with the TexhPulze team for support, business inquiries, or technology grievance reporting",
+    "url": "https://www.texhpulze.com/contact",
+    "mainEntity": {
+      "@type": "Organization",
+      "name": "TexhPulze",
+      "email": "support@texhpulze.com",
+      "contactPoint": [
+        {
+          "@type": "ContactPoint",
+          "email": "support@texhpulze.com",
+          "contactType": "Customer Support",
+          "availableLanguage": "English"
+        },
+        {
+          "@type": "ContactPoint",
+          "email": "business@texhpulze.com",
+          "contactType": "Business Inquiries",
+          "availableLanguage": "English"
+        }
+      ]
+    }
+  };
+
   return (
     <div className="contact-page">
+      <SEO
+        title="Contact TexhPulze - Get in Touch | Support & Business Inquiries"
+        description="Contact the TexhPulze team for support, partnerships, or technology grievance assistance. Email us at support@texhpulze.com or fill out our contact form. We're here to help with tech issues, platform questions, and collaboration opportunities."
+        keywords="contact texhpulze, tech support, technology help, report tech issues, business inquiries, tech platform support, grievance reporting contact"
+        type="website"
+        structuredData={structuredData}
+      />
       <section className="page-hero">
         <div className="container">
           <h1>Contact Us</h1>
