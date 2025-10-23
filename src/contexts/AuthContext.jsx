@@ -6,13 +6,7 @@
  */
 
 import { createContext, useContext, useEffect, useState } from 'react';
-import {
-  supabase,
-  getCurrentUser,
-  getCurrentSession,
-  signOut as supabaseSignOut,
-  handleSupabaseError,
-} from '../lib/supabase';
+import { supabase } from '../lib/supabase';
 
 /**
  * Authentication Context Type
@@ -78,15 +72,14 @@ export function AuthProvider({ children }) {
    */
   async function initializeAuth() {
     try {
-      const currentSession = await getCurrentSession();
-      const currentUser = await getCurrentUser();
+      const { data: { session } } = await supabase.auth.getSession();
 
-      setSession(currentSession);
-      setUser(currentUser);
+      setSession(session);
+      setUser(session?.user ?? null);
 
       // Ensure profile exists
-      if (currentUser) {
-        await ensureProfile(currentUser);
+      if (session?.user) {
+        await ensureProfile(session.user);
       }
     } catch (error) {
       console.error('Error initializing auth:', error);
@@ -157,7 +150,7 @@ export function AuthProvider({ children }) {
       if (error) {
         return {
           success: false,
-          error: handleSupabaseError(error, 'Sign up'),
+          error: error.message || 'Failed to sign up',
         };
       }
 
@@ -174,7 +167,7 @@ export function AuthProvider({ children }) {
     } catch (error) {
       return {
         success: false,
-        error: handleSupabaseError(error, 'Sign up'),
+        error: error.message || 'Failed to sign up',
       };
     }
   }
@@ -197,7 +190,7 @@ export function AuthProvider({ children }) {
       if (error) {
         return {
           success: false,
-          error: handleSupabaseError(error, 'Sign in'),
+          error: error.message || 'Failed to sign in',
         };
       }
 
@@ -205,7 +198,7 @@ export function AuthProvider({ children }) {
     } catch (error) {
       return {
         success: false,
-        error: handleSupabaseError(error, 'Sign in'),
+        error: error.message || 'Failed to sign in',
       };
     }
   }
@@ -217,12 +210,18 @@ export function AuthProvider({ children }) {
    */
   async function signOut() {
     try {
-      await supabaseSignOut();
+      const { error } = await supabase.auth.signOut();
+      if (error) {
+        return {
+          success: false,
+          error: error.message || 'Failed to sign out',
+        };
+      }
       return { success: true };
     } catch (error) {
       return {
         success: false,
-        error: handleSupabaseError(error, 'Sign out'),
+        error: error.message || 'Failed to sign out',
       };
     }
   }
@@ -247,7 +246,7 @@ export function AuthProvider({ children }) {
       if (error) {
         return {
           success: false,
-          error: handleSupabaseError(error, 'Update profile'),
+          error: error.message || 'Failed to update profile',
         };
       }
 
@@ -255,7 +254,7 @@ export function AuthProvider({ children }) {
     } catch (error) {
       return {
         success: false,
-        error: handleSupabaseError(error, 'Update profile'),
+        error: error.message || 'Failed to update profile',
       };
     }
   }
@@ -275,7 +274,7 @@ export function AuthProvider({ children }) {
       if (error) {
         return {
           success: false,
-          error: handleSupabaseError(error, 'Password reset'),
+          error: error.message || 'Failed to reset password',
         };
       }
 
@@ -286,7 +285,7 @@ export function AuthProvider({ children }) {
     } catch (error) {
       return {
         success: false,
-        error: handleSupabaseError(error, 'Password reset'),
+        error: error.message || 'Failed to reset password',
       };
     }
   }
