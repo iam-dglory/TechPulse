@@ -1,8 +1,18 @@
 -- TexhPulze Company Verification & Credibility System
 -- Run this in Supabase SQL Editor after the main migration
 
+-- Drop existing tables if they exist to avoid conflicts
+DROP TABLE IF EXISTS user_badges CASCADE;
+DROP TABLE IF EXISTS company_verification_docs CASCADE;
+DROP TABLE IF EXISTS company_score_history CASCADE;
+DROP TABLE IF EXISTS review_reports CASCADE;
+DROP TABLE IF EXISTS review_helpful_votes CASCADE;
+DROP TABLE IF EXISTS company_followers CASCADE;
+DROP TABLE IF EXISTS reviews CASCADE;
+DROP TABLE IF EXISTS companies CASCADE;
+
 -- Companies Table (with comprehensive verification)
-CREATE TABLE IF NOT EXISTS companies (
+CREATE TABLE companies (
   id BIGSERIAL PRIMARY KEY,
 
   -- Basic Information
@@ -74,7 +84,7 @@ CREATE TABLE IF NOT EXISTS companies (
 );
 
 -- Reviews Table (enhanced with verification)
-CREATE TABLE IF NOT EXISTS reviews (
+CREATE TABLE reviews (
   id BIGSERIAL PRIMARY KEY,
   company_id BIGINT REFERENCES companies(id) ON DELETE CASCADE NOT NULL,
   user_id UUID REFERENCES auth.users(id) ON DELETE CASCADE NOT NULL,
@@ -114,7 +124,7 @@ CREATE TABLE IF NOT EXISTS reviews (
 );
 
 -- Review Helpful Votes
-CREATE TABLE IF NOT EXISTS review_helpful_votes (
+CREATE TABLE review_helpful_votes (
   id BIGSERIAL PRIMARY KEY,
   review_id BIGINT REFERENCES reviews(id) ON DELETE CASCADE NOT NULL,
   user_id UUID REFERENCES auth.users(id) ON DELETE CASCADE NOT NULL,
@@ -123,7 +133,7 @@ CREATE TABLE IF NOT EXISTS review_helpful_votes (
 );
 
 -- Review Reports
-CREATE TABLE IF NOT EXISTS review_reports (
+CREATE TABLE review_reports (
   id BIGSERIAL PRIMARY KEY,
   review_id BIGINT REFERENCES reviews(id) ON DELETE CASCADE NOT NULL,
   reported_by UUID REFERENCES auth.users(id) ON DELETE CASCADE NOT NULL,
@@ -136,7 +146,7 @@ CREATE TABLE IF NOT EXISTS review_reports (
 );
 
 -- Company Followers
-CREATE TABLE IF NOT EXISTS company_followers (
+CREATE TABLE company_followers (
   id BIGSERIAL PRIMARY KEY,
   company_id BIGINT REFERENCES companies(id) ON DELETE CASCADE NOT NULL,
   user_id UUID REFERENCES auth.users(id) ON DELETE CASCADE NOT NULL,
@@ -145,7 +155,7 @@ CREATE TABLE IF NOT EXISTS company_followers (
 );
 
 -- Company Score History (for trending)
-CREATE TABLE IF NOT EXISTS company_score_history (
+CREATE TABLE company_score_history (
   id BIGSERIAL PRIMARY KEY,
   company_id BIGINT REFERENCES companies(id) ON DELETE CASCADE NOT NULL,
   credibility_score DECIMAL(5,2),
@@ -159,7 +169,7 @@ CREATE TABLE IF NOT EXISTS company_score_history (
 );
 
 -- Company Verification Documents Metadata
-CREATE TABLE IF NOT EXISTS company_verification_docs (
+CREATE TABLE company_verification_docs (
   id BIGSERIAL PRIMARY KEY,
   company_id BIGINT REFERENCES companies(id) ON DELETE CASCADE NOT NULL,
   document_type VARCHAR(50) NOT NULL CHECK (document_type IN ('business_registration', 'tax_id', 'address_proof', 'other')),
@@ -175,7 +185,7 @@ CREATE TABLE IF NOT EXISTS company_verification_docs (
 );
 
 -- User Badges/Achievements
-CREATE TABLE IF NOT EXISTS user_badges (
+CREATE TABLE user_badges (
   id BIGSERIAL PRIMARY KEY,
   user_id UUID REFERENCES auth.users(id) ON DELETE CASCADE NOT NULL,
   badge_type VARCHAR(50) NOT NULL CHECK (badge_type IN ('top_reviewer', 'verified_user', 'helpful_contributor', 'early_adopter', 'moderator')),
