@@ -1124,31 +1124,25 @@ img {
     font-size: 14px;
   }
 
-  .hero {
-    padding: 2.5rem 0;
-  }
-
-  .hero h1 {
-    font-size: 1.875rem;
-  }
-
-  .articles-grid {
-    grid-template-columns: 1fr;
-    gap: 1.5rem;
-  }
-
-  .features-grid {
-    grid-template-columns: 1fr;
-    gap: 1.5rem;
-  }
-
-  .category-buttons {
-    justify-content: center;
-  }
-
-  .category-buttons button {
-    font-size: 0.875rem;
-    padding: 0.5rem 1rem;
+  .demo-section { padding: 48px 0; background: #0b1020; color: #eef2ff; }
+  .demo-container { display: grid; grid-template-columns: 1.2fr 0.8fr; gap: 24px; align-items: center; }
+  .demo-content h2 { font-size: 28px; margin-bottom: 8px; }
+  .demo-description { color: #cbd5e1; margin-bottom: 16px; }
+  .demo-visual { display: flex; justify-content: center; }
+  .demo-card { background: #0f172a; border: 1px solid #1e293b; border-radius: 12px; width: 100%; max-width: 380px; box-shadow: 0 10px 20px rgba(0,0,0,0.35); }
+  .demo-card-header { padding: 12px 16px; border-bottom: 1px solid #1e293b; font-weight: 600; }
+  .demo-card-body { padding: 16px; }
+  .demo-stat { display: flex; justify-content: space-between; padding: 10px 12px; border-radius: 8px; background: #0b1222; border: 1px solid #1e293b; margin-bottom: 10px; }
+  .stat-label { color: #cbd5e1; }
+  .stat-value { color: #93c5fd; font-weight: 600; }
+  
+  /* compact button style reuse */
+  .btn-primary { display: inline-block; background: #2563eb; color: white; border: none; padding: 10px 16px; border-radius: 8px; text-decoration: none; font-weight: 600; }
+  .btn-primary:hover { background: #1d4ed8; }
+  
+  @media (max-width: 768px) {
+    .demo-container { grid-template-columns: 1fr; }
+    .demo-visual { margin-top: 12px; }
   }
 }
 

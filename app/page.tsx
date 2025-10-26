@@ -1,13 +1,28 @@
-import { Suspense } from 'react';
 import { createServerComponentClient } from '@supabase/auth-helpers-nextjs';
 import { cookies } from 'next/headers';
 import Link from 'next/link';
 import { ArrowRight, TrendingUp, Shield, Users, Sparkles } from 'lucide-react';
-import { HeroSection } from '@/components/landing/hero-section';
-import { StatsCounter } from '@/components/landing/stats-counter';
-import { TrendingCompaniesSection } from '@/components/landing/trending-companies';
-import { FeaturesGrid } from '@/components/landing/features-grid';
 import type { TrendingCompany } from '@/types/database';
+import { LazyLoad } from '@/lib/lazy-components';
+
+// Lazy load components for better performance
+const LazyHeroSection = dynamic(() => import('@/components/landing/hero-section').then(mod => ({ default: mod.HeroSection })), {
+  loading: () => <div className="h-[600px] bg-slate-100 dark:bg-slate-800 animate-pulse" />
+});
+
+const LazyStatsCounter = dynamic(() => import('@/components/landing/stats-counter').then(mod => ({ default: mod.StatsCounter })), {
+  loading: () => <div className="h-24 bg-slate-100 dark:bg-slate-800 animate-pulse" />
+});
+
+const LazyTrendingCompaniesSection = dynamic(() => import('@/components/landing/trending-companies').then(mod => ({ default: mod.TrendingCompaniesSection })), {
+  loading: () => <TrendingCompaniesSkeleton />
+});
+
+const LazyFeaturesGrid = dynamic(() => import('@/components/landing/features-grid').then(mod => ({ default: mod.FeaturesGrid })), {
+  loading: () => <div className="h-96 bg-slate-100 dark:bg-slate-800 animate-pulse" />
+});
+
+import dynamic from 'next/dynamic';
 
 // =====================================================
 // TECHPULZE LANDING PAGE
@@ -64,12 +79,12 @@ export default async function HomePage() {
   return (
     <main className="min-h-screen bg-gradient-to-b from-slate-50 to-white dark:from-slate-950 dark:to-slate-900">
       {/* Hero Section */}
-      <HeroSection />
+      <LazyHeroSection />
 
       {/* Statistics Counter */}
       <section className="py-16 bg-white dark:bg-slate-900 border-y border-slate-200 dark:border-slate-800">
         <div className="container mx-auto px-4">
-          <StatsCounter
+          <LazyStatsCounter
             companies={stats.companies}
             reviews={stats.reviews}
             growing={stats.growing}
@@ -94,9 +109,9 @@ export default async function HomePage() {
             </p>
           </div>
 
-          <Suspense fallback={<TrendingCompaniesSkeleton />}>
-            <TrendingCompaniesSection companies={trendingCompanies} />
-          </Suspense>
+          <LazyLoad>
+            <LazyTrendingCompaniesSection companies={trendingCompanies} />
+          </LazyLoad>
 
           <div className="text-center mt-12">
             <Link
@@ -122,7 +137,9 @@ export default async function HomePage() {
             </p>
           </div>
 
-          <FeaturesGrid />
+          <LazyLoad>
+            <LazyFeaturesGrid />
+          </LazyLoad>
         </div>
       </section>
 

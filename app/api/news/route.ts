@@ -1,7 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { createRouteHandlerClient } from '@supabase/auth-helpers-nextjs';
 import { cookies } from 'next/headers';
 import { z } from 'zod';
+import { createSupabaseServer } from '@/lib/supabase/server';
+import { rateLimitRequest } from '@/lib/rateLimited';
 
 // =====================================================
 // ROUTE: NEWS API
@@ -40,7 +41,11 @@ const CreateNewsSchema = z.object({
 // =====================================================
 export async function GET(request: NextRequest) {
   try {
-    const supabase = createRouteHandlerClient({ cookies });
+    // Apply rate limiting
+    const rateLimitResponse = await rateLimitRequest(request, 'api');
+    if (rateLimitResponse) return rateLimitResponse;
+    
+    const supabase = createSupabaseServer();
     const { searchParams } = new URL(request.url);
 
     const params = ListNewsSchema.parse({
@@ -141,7 +146,11 @@ export async function GET(request: NextRequest) {
 // =====================================================
 export async function POST(request: NextRequest) {
   try {
-    const supabase = createRouteHandlerClient({ cookies });
+    // Apply rate limiting
+    const rateLimitResponse = await rateLimitRequest(request, 'admin');
+    if (rateLimitResponse) return rateLimitResponse;
+    
+    const supabase = createSupabaseServer();
 
     // Check authentication
     const { data: { session }, error: authError } = await supabase.auth.getSession();
@@ -150,6 +159,20 @@ export async function POST(request: NextRequest) {
       return NextResponse.json(
         { error: 'Authentication required' },
         { status: 401 }
+      );
+    }
+    
+    // Check if user is admin or journalist
+    const { data: profile } = await supabase
+      .from('profiles')
+      .select('user_type')
+      .eq('id', session.user.id)
+      .single();
+      
+    if (!profile || !['admin', 'journalist'].includes(profile.user_type)) {
+      return NextResponse.json(
+        { error: 'Insufficient permissions' },
+        { status: 403 }
       );
     }
 

@@ -1,4 +1,4 @@
-# TexhPulze - Robots.txt
+# TechPulze - Robots.txt
 # https://www.robotstxt.org/robotstxt.html
 
 # Allow all search engines to crawl the site

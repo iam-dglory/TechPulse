@@ -2,6 +2,7 @@ import { Link, useLocation } from 'react-router-dom';
 import { useState } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import AuthModal from './auth/AuthModal';
+import NotificationBell from './NotificationBell';
 
 function Navbar() {
   const location = useLocation();
@@ -72,45 +73,48 @@ function Navbar() {
             </Link>
 
             {/* Authentication Controls */}
-            <div className="nav-auth">
+            <div className="nav-auth" style={{ display: 'flex', alignItems: 'center' }}>
               {user ? (
-                <div className="user-menu-wrapper">
-                  <button
-                    className="user-menu-trigger"
-                    onClick={() => setUserMenuOpen(!userMenuOpen)}
-                    aria-label="User menu"
-                  >
-                    <div className="user-avatar">
-                      {user.user_metadata?.avatar_url ? (
-                        <img
-                          src={user.user_metadata.avatar_url}
-                          alt={user.user_metadata?.full_name || 'User'}
-                        />
-                      ) : (
-                        <span>
-                          {user.user_metadata?.full_name
-                            ? user.user_metadata.full_name.charAt(0).toUpperCase()
-                            : user.email.charAt(0).toUpperCase()}
-                        </span>
-                      )}
-                    </div>
-                  </button>
-
-                  {userMenuOpen && (
-                    <div className="user-menu-dropdown">
-                      <div className="user-menu-header">
-                        <p className="user-name">
-                          {user.user_metadata?.full_name || 'User'}
-                        </p>
-                        <p className="user-email">{user.email}</p>
+                <>
+                  <NotificationBell />
+                  <div className="user-menu-wrapper">
+                    <button
+                      className="user-menu-trigger"
+                      onClick={() => setUserMenuOpen(!userMenuOpen)}
+                      aria-label="User menu"
+                    >
+                      <div className="user-avatar">
+                        {user.user_metadata?.avatar_url ? (
+                          <img
+                            src={user.user_metadata.avatar_url}
+                            alt={user.user_metadata?.full_name || 'User'}
+                          />
+                        ) : (
+                          <span>
+                            {user.user_metadata?.full_name
+                              ? user.user_metadata.full_name.charAt(0).toUpperCase()
+                              : user.email.charAt(0).toUpperCase()}
+                          </span>
+                        )}
                       </div>
-                      <div className="user-menu-divider"></div>
-                      <button className="user-menu-item" onClick={handleSignOut}>
-                        Sign Out
-                      </button>
-                    </div>
-                  )}
-                </div>
+                    </button>
+
+                    {userMenuOpen && (
+                      <div className="user-menu-dropdown">
+                        <div className="user-menu-header">
+                          <p className="user-name">
+                            {user.user_metadata?.full_name || 'User'}
+                          </p>
+                          <p className="user-email">{user.email}</p>
+                        </div>
+                        <div className="user-menu-divider"></div>
+                        <button className="user-menu-item" onClick={handleSignOut}>
+                          Sign Out
+                        </button>
+                      </div>
+                    )}
+                  </div>
+                </>
               ) : (
                 <>
                   <button className="btn-text" onClick={handleSignIn}>

@@ -1,8 +1,8 @@
 // app/api/companies/route.ts
 import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
-import { createSupabaseServer } from '../../../lib/supabase/server';
-import { rateLimit, lim } from '../../../lib/rateLimiter';
+import { createSupabaseServer, createSupabaseAdmin } from '@/lib/supabase/server';
+import { rateLimitRequest } from '@/lib/rateLimited';
 
 const listSchema = z.object({
   q: z.string().optional(),
@@ -12,6 +12,8 @@ const listSchema = z.object({
   limit: z.coerce.number().optional().default(20),
   minScore: z.coerce.number().optional(),
   maxScore: z.coerce.number().optional(),
+  verified: z.enum(['true', 'false']).optional(),
+  status: z.enum(['all', 'pending', 'approved', 'rejected']).optional(),
 });
 
 const createSchema = z.object({
@@ -25,40 +27,84 @@ const createSchema = z.object({
 
 export async function GET(request: NextRequest) {
   try {
-    // Rate limit keyed by IP
-    const ip = request.headers.get('x-forwarded-for') ?? request.ip ?? 'anon';
-    const rl = await rateLimit(ip);
-    if (!rl.success) {
-      return NextResponse.json({ error: 'Rate limit exceeded' }, { status: 429 });
-    }
+    // Apply rate limiting
+    const rateLimit = await rateLimitRequest(request);
+    if (rateLimit) return rateLimit;
 
     const url = new URL(request.url);
     const parsed = listSchema.parse(Object.fromEntries(url.searchParams.entries()));
 
     const supabase = createSupabaseServer();
+    
+    // Check if user is authenticated for additional data
+    const { data: { session } } = await supabase.auth.getSession();
+    const isAuthenticated = !!session?.user;
+    
+    // Get user type if authenticated
+    let isAdmin = false;
+    if (isAuthenticated) {
+      const { data: profile } = await supabase
+        .from('profiles')
+        .select('user_type')
+        .eq('id', session.user.id)
+        .single();
+      isAdmin = profile?.user_type === 'admin';
+    }
+
+    // Build query with select fields based on auth status
+    let selectFields = 'id, name, slug, logo_url, overall_score, verification_tier, growth_rate, industry, review_count, created_at';
+    
+    // Add more fields for authenticated users
+    if (isAuthenticated) {
+      selectFields += ', description, website, hq_location';
+      
+      // Add admin-only fields
+      if (isAdmin && parsed.status) {
+        selectFields += ', claimed_by, verification_status';
+      }
+    }
 
     // Build query
-    let query = supabase.from('companies').select('id, name, slug, logo_url, overall_score, verification_tier, growth_rate').range((parsed.page - 1) * parsed.limit, parsed.page * parsed.limit - 1);
+    let query = supabase.from('companies').select(selectFields);
+    
+    // Apply pagination
+    query = query.range((parsed.page - 1) * parsed.limit, parsed.page * parsed.limit - 1);
 
+    // Apply filters
     if (parsed.q) {
-      // Full text search if you implemented tsvector; fallback to ilike
+      // Full text search if implemented; fallback to ilike
       query = query.ilike('name', `%${parsed.q}%`);
     }
     if (parsed.industry) query = query.eq('industry', parsed.industry);
+    if (parsed.minScore) query = query.gte('overall_score', parsed.minScore);
+    if (parsed.maxScore) query = query.lte('overall_score', parsed.maxScore);
+    if (parsed.verified === 'true') query = query.not('verification_tier', 'is', null);
+    
+    // Admin-only filters
+    if (isAdmin && parsed.status && parsed.status !== 'all') {
+      query = query.eq('verification_status', parsed.status);
+    }
 
     // Sorting
     if (parsed.sort === 'trending') query = query.order('trending_score', { ascending: false });
     else if (parsed.sort === 'score') query = query.order('overall_score', { ascending: false });
     else if (parsed.sort === 'growth') query = query.order('growth_rate', { ascending: false });
+    else if (parsed.sort === 'reviews') query = query.order('review_count', { ascending: false });
     else query = query.order('created_at', { ascending: false });
 
     const { data, error } = await query;
     if (error) throw error;
 
-    // count (lightweight approach)
+    // Count (lightweight approach)
     const { count } = await supabase.from('companies').select('id', { count: 'exact', head: true });
 
-    return NextResponse.json({ data, count: count ?? null, page: parsed.page });
+    return NextResponse.json({ 
+      data, 
+      count: count ?? null, 
+      page: parsed.page,
+      total_pages: count ? Math.ceil(count / parsed.limit) : 1,
+      has_more: count ? (parsed.page * parsed.limit) < count : false
+    });
   } catch (err: any) {
     return NextResponse.json({ error: err.message || 'Unknown error' }, { status: 500 });
   }
@@ -66,6 +112,10 @@ export async function GET(request: NextRequest) {
 
 export async function POST(request: NextRequest) {
   try {
+    // Apply rate limiting
+    const rateLimit = await rateLimitRequest(request, 'admin');
+    if (rateLimit) return rateLimit;
+    
     const body = await request.json();
     const payload = createSchema.parse(body);
 

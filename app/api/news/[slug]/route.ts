@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { createRouteHandlerClient } from '@supabase/auth-helpers-nextjs';
-import { cookies } from 'next/headers';
+import { createSupabaseServer } from '@/lib/supabase/server';
+import { rateLimitRequest } from '@/lib/rateLimited';
 
 // =====================================================
 // ROUTE: SINGLE NEWS ARTICLE API
@@ -12,7 +12,11 @@ export async function GET(
   { params }: { params: { slug: string } }
 ) {
   try {
-    const supabase = createRouteHandlerClient({ cookies });
+    // Apply rate limiting
+    const rateLimitResponse = await rateLimitRequest(request, 'api');
+    if (rateLimitResponse) return rateLimitResponse;
+    
+    const supabase = createSupabaseServer();
     const { slug } = params;
 
     // Get article

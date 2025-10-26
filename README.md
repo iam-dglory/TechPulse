@@ -4,6 +4,42 @@
 
 TexhPulze combines the power of AI news aggregation with community-driven technology grievance reporting and discussion forums. It empowers citizens, researchers, policymakers, and governments to report, discuss, and categorize technology risks using AI-powered tools.
 
+## 🚀 Deployment
+
+TechPulze is deployed using Vercel for the frontend and serverless functions, with Supabase providing the database, authentication, storage, and realtime features.
+
+### Quick Start
+
+1. **Clone the repository**
+   ```bash
+   git clone https://github.com/iam-dglory/TechPulse.git
+   cd TechPulse
+   ```
+
+2. **Install dependencies**
+   ```bash
+   npm install
+   ```
+
+3. **Set up environment variables**
+   ```bash
+   cp .env.example .env.local
+   # Edit .env.local with your Supabase and other credentials
+   ```
+
+4. **Run the development server**
+   ```bash
+   npm run dev
+   ```
+
+5. **Deploy to production**
+   ```bash
+   npm run build
+   npm run start
+   ```
+
+For detailed setup instructions, see [DEVELOPMENT.md](./DEVELOPMENT.md).
+
 ## 🎯 **Core Features**
 
 ### 📰 **AI News Aggregation** (Existing)
@@ -114,9 +150,11 @@ TexhPulze/
 
 ### **Prerequisites**
 - Node.js 18+
-- MySQL 8.0+
-- React Native development environment
-- Docker (optional)
+- Supabase account
+- Vercel account
+- OpenAI API key
+- Upstash Redis account (for rate limiting)
+- Vercel KV (for caching)
 
 ### **Installation**
 
@@ -126,28 +164,42 @@ git clone https://github.com/iam-dglory/TechPulse.git
 cd TechPulse
 ```
 
-2. **Backend Setup**
+2. **Setup environment variables**
 ```bash
-cd backend
+cp .env.example .env.local
+# Configure your environment variables (see below)
+```
+
+Required environment variables:
+```
+NEXT_PUBLIC_SUPABASE_URL=your_supabase_url
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
+SUPABASE_SERVICE_ROLE_KEY=your_supabase_service_role_key
+OPENAI_API_KEY=your_openai_api_key
+UPSTASH_REDIS_REST_URL=your_upstash_redis_url
+UPSTASH_REDIS_REST_TOKEN=your_upstash_redis_token
+KV_REST_API_URL=your_vercel_kv_url
+KV_REST_API_TOKEN=your_vercel_kv_token
+NEXT_PUBLIC_API_BASE=/api
+NEXT_PUBLIC_APP_NAME=TechPulze
+NEXT_PUBLIC_APP_VERSION=1.0.0
+NEXT_PUBLIC_APP_URL=http://localhost:3000
+```
+
+3. **Install dependencies and run development server**
+```bash
 npm install
-cp .env.example .env
-# Configure your environment variables
 npm run dev
 ```
 
-3. **Mobile App Setup**
+4. **Supabase Setup**
 ```bash
-cd mobile
-npm install
-npx expo start
+# Run the SQL migrations from supabase/supabase-techpulze-complete-schema.sql
+# Apply RLS policies from supabase/rls-policies.sql
 ```
 
-4. **AI Services Setup**
-```bash
-cd ai-services
-pip install -r requirements.txt
-python app.py
-```
+5. **Deploy to Vercel**
+See detailed instructions in [README-VERCEL.md](README-VERCEL.md)
 
 ## 📊 **Database Schema**
 

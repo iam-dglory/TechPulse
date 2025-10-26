@@ -1,7 +1,7 @@
 {
-  "name": "TexhPulze - Technology Grievance Platform",
-  "short_name": "TexhPulze",
-  "description": "World's First Public Grievance & Discussion Platform for Technology",
+  "name": "TechPulze - Tech Company Ethics Ratings",
+  "short_name": "TechPulze",
+  "description": "AI-Powered Ethics Ratings, Real-Time Updates, and Community-Driven Transparency for tech companies worldwide.",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#ffffff",
@@ -13,9 +13,35 @@
       "sizes": "any",
       "type": "image/svg+xml",
       "purpose": "any maskable"
+    },
+    {
+      "src": "/favicon-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/favicon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
     }
   ],
-  "categories": ["news", "technology", "productivity"],
+  "categories": ["business", "technology", "ethics", "transparency"],
   "lang": "en-US",
-  "dir": "ltr"
+  "dir": "ltr",
+  "screenshots": [
+    {
+      "src": "/screenshot-desktop.png",
+      "sizes": "1280x720",
+      "type": "image/png",
+      "form_factor": "wide"
+    },
+    {
+      "src": "/screenshot-mobile.png",
+      "sizes": "720x1280",
+      "type": "image/png",
+      "form_factor": "narrow"
+    }
+  ]
 }

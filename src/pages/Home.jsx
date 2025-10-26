@@ -184,6 +184,47 @@ function Home() {
         </div>
       </section>
 
+      {/* Schedule a Demo Section */}
+      <section className="demo-section" aria-label="Schedule a Demo">
+        <div className="container demo-container">
+          <div className="demo-content">
+            <h2>See TexhPulze in Action</h2>
+            <p className="demo-description">
+              Book a live walkthrough of our AI-powered tech news and grievance platform.
+              We’ll tailor the session for citizens, researchers, policymakers, or government teams.
+            </p>
+            <a
+              className="btn-primary"
+              href="https://cal.com/texhpulze/demo"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Schedule a demo on Cal.com (opens in new tab)"
+            >
+              Schedule a Demo
+            </a>
+          </div>
+          <div className="demo-visual" aria-hidden="true">
+            <div className="demo-card">
+              <div className="demo-card-header">Live Demo Preview</div>
+              <div className="demo-card-body">
+                <div className="demo-stat">
+                  <span className="stat-label">AI Insights</span>
+                  <span className="stat-value">Real-time</span>
+                </div>
+                <div className="demo-stat">
+                  <span className="stat-label">Grievance Intake</span>
+                  <span className="stat-value">Structured</span>
+                </div>
+                <div className="demo-stat">
+                  <span className="stat-label">Policy Reports</span>
+                  <span className="stat-value">Actionable</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* Features Section */}
       <section className="features-section" aria-label="Core features">
         <div className="container">
