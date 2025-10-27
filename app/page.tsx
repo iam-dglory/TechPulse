@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { createClient } from "@/lib/supabase/server"
+import { BookDemoDialog } from "@/components/book-demo-dialog"
 
 export default async function HomePage() {
   const supabase = await createClient()
@@ -41,6 +42,7 @@ export default async function HomePage() {
                 <ArrowRight className="w-4 h-4" />
               </Button>
             </Link>
+            <BookDemoDialog />
             <Link href="/signup">
               <Button size="lg" variant="outline">
                 Get Started Free

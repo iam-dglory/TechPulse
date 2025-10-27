@@ -8,6 +8,54 @@ import { createClient } from "@/lib/supabase/server"
 import { ExternalLink, TrendingUp, Users, Star } from "lucide-react"
 import { formatDate } from "@/lib/utils"
 
+// Helper function to generate score explanations
+function getScoreExplanation(dimensionName: string, score: number, reviewCount: number): string {
+  const scoreLevel = score >= 8 ? "excellent" : score >= 6.5 ? "good" : score >= 5 ? "average" : score >= 3 ? "below average" : "poor"
+
+  const explanations: { [key: string]: { [key: string]: string } } = {
+    "Privacy & Data Protection": {
+      excellent: "Demonstrates strong data protection practices, transparent privacy policies, and minimal data collection. Users have significant control over their personal information.",
+      good: "Maintains solid privacy standards with clear policies, though there may be some areas for improvement in data minimization or user control.",
+      average: "Basic privacy protections in place but lacks transparency in some areas. Data practices may raise concerns for privacy-conscious users.",
+      "below average": "Privacy policies are unclear or overly broad. Significant concerns about data collection practices and user privacy controls.",
+      poor: "Major privacy concerns including extensive data collection, unclear policies, or history of privacy violations. Users should exercise caution."
+    },
+    "Transparency & Accountability": {
+      excellent: "Highly transparent with open communication about practices, challenges, and decision-making. Strong accountability mechanisms in place.",
+      good: "Generally transparent operations with regular reporting and stakeholder engagement. Some room for improvement in specific areas.",
+      average: "Moderate transparency with basic reporting. May lack detail in certain areas or inconsistent communication practices.",
+      "below average": "Limited transparency with vague reporting and poor stakeholder communication. Accountability structures need strengthening.",
+      poor: "Opaque operations with minimal disclosure. Lacks accountability and has faced criticism for secretive practices."
+    },
+    "Labor Practices & Diversity": {
+      excellent: "Outstanding workplace culture with strong diversity initiatives, fair compensation, excellent work-life balance, and comprehensive employee benefits.",
+      good: "Positive work environment with diversity programs and fair treatment, though some areas like representation or work culture could improve.",
+      average: "Standard labor practices that meet basic requirements but lack standout initiatives in diversity, equity, or employee wellbeing.",
+      "below average": "Concerns about workplace culture, limited diversity efforts, or reports of unfair treatment. Significant room for improvement needed.",
+      poor: "Serious labor issues including poor working conditions, discrimination complaints, or inadequate compensation and benefits."
+    },
+    "Environmental Impact": {
+      excellent: "Leading sustainability practices with ambitious climate goals, renewable energy usage, and comprehensive environmental programs.",
+      good: "Meaningful environmental initiatives and progress toward sustainability goals, though more aggressive action could be taken.",
+      average: "Basic environmental compliance with some green initiatives. Lacks comprehensive sustainability strategy or ambitious targets.",
+      "below average": "Limited environmental efforts or slow progress on climate commitments. Environmental impact remains a concern.",
+      poor: "Minimal environmental responsibility with high carbon footprint and no meaningful sustainability initiatives or targets."
+    },
+    "Community & Social Impact": {
+      excellent: "Exceptional positive impact on communities through programs, charitable giving, and ethical business practices that benefit society.",
+      good: "Meaningful community engagement and social responsibility programs with measurable positive impacts.",
+      average: "Some community involvement and social initiatives but limited scope or inconsistent commitment to social good.",
+      "below average": "Minimal community engagement or social programs. May have negative impacts that outweigh positive contributions.",
+      poor: "Negative social impact through harmful products, exploitative practices, or disregard for community wellbeing."
+    }
+  }
+
+  const baseExplanation = explanations[dimensionName]?.[scoreLevel] || "Score based on available reviews and data."
+  const reviewNote = reviewCount > 10 ? " Based on extensive community feedback." : reviewCount > 3 ? " Based on community reviews." : reviewCount > 0 ? " Based on limited reviews - more feedback needed for accurate assessment." : " Preliminary rating - community reviews needed for validation."
+
+  return baseExplanation + reviewNote
+}
+
 export default async function CompanyProfilePage({
   params,
 }: {
@@ -237,19 +285,22 @@ export default async function CompanyProfilePage({
                 { name: "Environmental Impact", score: company.environment_score, color: "emerald" },
                 { name: "Community & Social Impact", score: company.community_score, color: "indigo" },
               ].map((dimension) => (
-                <div key={dimension.name}>
+                <div key={dimension.name} className="space-y-2">
                   <div className="flex items-center justify-between mb-2">
                     <span className="font-semibold">{dimension.name}</span>
                     <span className={`font-bold text-${dimension.color}-600`}>
                       {dimension.score.toFixed(1)}/10
                     </span>
                   </div>
-                  <div className="w-full bg-muted rounded-full h-3">
+                  <div className="w-full bg-muted rounded-full h-3 mb-2">
                     <div
                       className={`bg-${dimension.color}-600 h-3 rounded-full transition-all`}
                       style={{ width: `${dimension.score * 10}%` }}
                     />
                   </div>
+                  <p className="text-sm text-muted-foreground leading-relaxed">
+                    {getScoreExplanation(dimension.name, dimension.score, company.review_count)}
+                  </p>
                 </div>
               ))}
             </CardContent>

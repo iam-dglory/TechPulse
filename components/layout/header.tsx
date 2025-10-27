@@ -37,7 +37,7 @@ export function Header() {
         <div className="mr-4 flex">
           <Link href="/" className="mr-6 flex items-center space-x-2">
             <span className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
-              TechPulze
+              TexhPulze
             </span>
           </Link>
           <nav className="flex items-center space-x-6 text-sm font-medium">

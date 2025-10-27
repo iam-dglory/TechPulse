@@ -8,7 +8,7 @@ import { Toaster } from "@/components/ui/toaster"
 const inter = Inter({ subsets: ["latin"] })
 
 export const metadata: Metadata = {
-  title: "TechPulze - AI-Powered Tech Company Ethics Ratings",
+  title: "TexhPulze - AI-Powered Tech Company Ethics Ratings",
   description: "Know which tech companies you can trust with AI-powered ethics ratings and community reviews.",
 }
 
