@@ -1,0 +1,9 @@
+{
+  "version": 2,
+  "name": "techpulze",
+  "buildCommand": "next build",
+  "devCommand": "next dev",
+  "installCommand": "npm install",
+  "framework": "nextjs",
+  "regions": ["iad1"]
+}
