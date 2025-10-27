@@ -7,11 +7,12 @@ import { Building2 } from "lucide-react"
 export default async function CompaniesPage({
   searchParams,
 }: {
-  searchParams: { page?: string; search?: string; industry?: string }
+  searchParams: Promise<{ page?: string; search?: string; industry?: string }>
 }) {
-  const page = parseInt(searchParams.page || "1")
-  const search = searchParams.search || ""
-  const industry = searchParams.industry || ""
+  const params = await searchParams
+  const page = parseInt(params.page || "1")
+  const search = params.search || ""
+  const industry = params.industry || ""
 
   const supabase = await createClient()
 
