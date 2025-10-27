@@ -11,15 +11,16 @@ import { formatDate } from "@/lib/utils"
 export default async function CompanyProfilePage({
   params,
 }: {
-  params: { slug: string }
+  params: Promise<{ slug: string }>
 }) {
+  const { slug } = await params
   const supabase = await createClient()
 
   // Fetch company
   const { data: company, error: companyError } = await supabase
     .from("companies")
     .select("*")
-    .eq("slug", params.slug)
+    .eq("slug", slug)
     .single()
 
   if (companyError || !company) {

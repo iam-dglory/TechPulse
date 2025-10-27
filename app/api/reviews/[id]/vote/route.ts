@@ -3,9 +3,10 @@ import { createClient } from '@/lib/supabase/server'
 
 export async function POST(
   request: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id } = await params
     const supabase = await createClient()
     const {
       data: { user },
@@ -21,7 +22,7 @@ export async function POST(
     const { data: existing } = await supabase
       .from('review_votes')
       .select('id, is_helpful')
-      .eq('review_id', params.id)
+      .eq('review_id', id)
       .eq('user_id', user.id)
       .single()
 
@@ -34,7 +35,7 @@ export async function POST(
     } else {
       // Create new vote
       await supabase.from('review_votes').insert({
-        review_id: params.id,
+        review_id: id,
         user_id: user.id,
         is_helpful,
       })
@@ -44,13 +45,13 @@ export async function POST(
     const { count } = await supabase
       .from('review_votes')
       .select('*', { count: 'exact', head: true })
-      .eq('review_id', params.id)
+      .eq('review_id', id)
       .eq('is_helpful', true)
 
     await supabase
       .from('reviews')
       .update({ helpful_count: count || 0 })
-      .eq('id', params.id)
+      .eq('id', id)
 
     return NextResponse.json({ success: true, helpful_count: count || 0 })
   } catch (error: any) {

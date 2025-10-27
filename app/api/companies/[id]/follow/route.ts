@@ -3,9 +3,10 @@ import { createClient } from '@/lib/supabase/server'
 
 export async function POST(
   request: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id } = await params
     const supabase = await createClient()
     const {
       data: { user },
@@ -19,7 +20,7 @@ export async function POST(
     const { data: company } = await supabase
       .from('companies')
       .select('id')
-      .eq('slug', params.id)
+      .eq('slug', id)
       .single()
 
     if (!company) {

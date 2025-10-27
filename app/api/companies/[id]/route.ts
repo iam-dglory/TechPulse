@@ -4,10 +4,11 @@ import { getCached, setCache } from '@/lib/redis'
 
 export async function GET(
   request: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const cacheKey = `company:${params.id}`
+    const { id } = await params
+    const cacheKey = `company:${id}`
 
     // Try cache first
     const cached = await getCached(cacheKey)
@@ -19,7 +20,7 @@ export async function GET(
     const { data, error } = await supabase
       .from('companies')
       .select('*')
-      .eq('slug', params.id)
+      .eq('slug', id)
       .single()
 
     if (error) {
@@ -37,9 +38,10 @@ export async function GET(
 
 export async function PUT(
   request: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id } = await params
     const supabase = await createClient()
     const {
       data: { user },
@@ -54,7 +56,7 @@ export async function PUT(
     const { data, error } = await supabase
       .from('companies')
       .update(body)
-      .eq('slug', params.id)
+      .eq('slug', id)
       .select()
       .single()
 
@@ -70,9 +72,10 @@ export async function PUT(
 
 export async function DELETE(
   request: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id } = await params
     const supabase = await createClient()
     const {
       data: { user },
@@ -85,7 +88,7 @@ export async function DELETE(
     const { error } = await supabase
       .from('companies')
       .delete()
-      .eq('slug', params.id)
+      .eq('slug', id)
 
     if (error) {
       return NextResponse.json({ error: error.message }, { status: 500 })
