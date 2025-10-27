@@ -8,8 +8,8 @@ import { Toaster } from "@/components/ui/toaster"
 const inter = Inter({ subsets: ["latin"] })
 
 export const metadata: Metadata = {
-  title: "TexhPulze - AI-Powered Tech Company Ethics Ratings",
-  description: "Know which tech companies you can trust with AI-powered ethics ratings and community reviews.",
+  title: "TexhPulze - World's First Courtroom for Technology",
+  description: "AI-powered ethics ratings and community reviews help you make informed decisions about companies across all industries.",
 }
 
 export default function RootLayout({

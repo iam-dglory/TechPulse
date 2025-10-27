@@ -30,10 +30,10 @@ export default async function HomePage() {
             AI-Powered Ethics Ratings
           </Badge>
           <h1 className="text-5xl md:text-6xl font-bold mb-6 bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
-            Know Which Tech Companies You Can Trust
+            World's First Courtroom for Technology
           </h1>
           <p className="text-xl text-muted-foreground mb-8 max-w-2xl mx-auto">
-            AI-powered ethics ratings and community reviews help you make informed decisions about technology companies.
+            AI-powered ethics ratings and community reviews help you make informed decisions about companies across all industries.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link href="/companies">
@@ -92,9 +92,9 @@ export default async function HomePage() {
               <TrendingUp className="w-3 h-3 mr-1" />
               Trending This Week
             </Badge>
-            <h2 className="text-4xl font-bold mb-4">Top-Rated Tech Companies</h2>
+            <h2 className="text-4xl font-bold mb-4">Top-Rated Companies</h2>
             <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-              Discover companies leading in transparency, ethics, and innovation
+              Discover companies leading in transparency, ethics, and innovation across all industries
             </p>
           </div>
 

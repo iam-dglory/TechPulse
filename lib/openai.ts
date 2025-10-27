@@ -78,7 +78,7 @@ Return as JSON in this exact format:
       messages: [
         {
           role: 'system',
-          content: 'You are an expert ESG (Environmental, Social, Governance) analyst specializing in technology company ethics. Analyze companies objectively based on available data.',
+          content: 'You are an expert ESG (Environmental, Social, Governance) analyst specializing in corporate ethics across all industries. Analyze companies objectively based on available data, considering industry-specific context.',
         },
         { role: 'user', content: prompt },
       ],
