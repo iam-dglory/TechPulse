@@ -35,3 +35,7 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# Environment variable files (secrets)
+VERCEL_ENV_VARS.txt
+*.env.txt
