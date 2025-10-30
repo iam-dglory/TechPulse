@@ -47,8 +47,9 @@ export async function POST(request: Request) {
     // Calculate AI scores
     const scores = await calculateEthicsScore({
       name: company.name,
-      description: company.description,
-      industry: company.industry,
+      industry: company.industry || 'Technology',
+      description: company.description || 'No description available',
+      website: company.website,
       reviews: reviews.map((r) => ({
         content: r.content,
         ratings: {

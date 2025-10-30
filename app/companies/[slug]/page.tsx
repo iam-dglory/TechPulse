@@ -7,6 +7,7 @@ import { Badge } from "@/components/ui/badge"
 import { createClient } from "@/lib/supabase/server"
 import { ExternalLink, TrendingUp, Users, Star } from "lucide-react"
 import { formatDate } from "@/lib/utils"
+import { ScoreRequestButton } from "@/components/companies/score-request-button"
 
 // Helper function to generate score explanations
 function getScoreExplanation(dimensionName: string, score: number, reviewCount: number): string {
@@ -138,12 +139,25 @@ export default async function CompanyProfilePage({
             </div>
 
             {/* Overall Score */}
-            <div className="text-center bg-muted/50 rounded-lg p-6">
+            <div className="text-center bg-muted/50 rounded-lg p-6 space-y-3">
               <div className="text-5xl font-bold text-blue-600 mb-2">
                 {company.overall_score.toFixed(1)}
               </div>
               <div className="text-sm text-muted-foreground">Overall Score</div>
-              <div className="mt-4">
+              {company.last_scored_at && (
+                <div className="text-xs text-muted-foreground">
+                  Last scored: {new Date(company.last_scored_at).toLocaleDateString()}
+                </div>
+              )}
+              <div className="space-y-2">
+                {user && (
+                  <ScoreRequestButton
+                    companyId={company.id}
+                    companySlug={company.slug}
+                    companyName={company.name}
+                    lastScored={company.last_scored_at}
+                  />
+                )}
                 <Button className="w-full" variant={isFollowing ? "outline" : "default"}>
                   {isFollowing ? "Following" : "Follow"}
                 </Button>
