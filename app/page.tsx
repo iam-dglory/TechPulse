@@ -1,10 +1,11 @@
 import Link from "next/link"
-import { ArrowRight, Shield, TrendingUp, Users, Sparkles } from "lucide-react"
+import { ArrowRight, Shield, TrendingUp, Users, Sparkles, Search as SearchIcon } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { createClient } from "@/lib/supabase/server"
 import { BookDemoDialog } from "@/components/book-demo-dialog"
+import { CompanySearch } from "@/components/company-search"
 
 export default async function HomePage() {
   const supabase = await createClient()
@@ -49,6 +50,25 @@ export default async function HomePage() {
               </Button>
             </Link>
           </div>
+        </div>
+      </section>
+
+      {/* Get Your Ethics Score Section */}
+      <section className="py-16 px-4 bg-white dark:bg-slate-900">
+        <div className="container mx-auto">
+          <div className="text-center mb-8">
+            <Badge className="mb-4" variant="default">
+              <SearchIcon className="w-3 h-3 mr-1" />
+              Get Your Ethics Score
+            </Badge>
+            <h2 className="text-3xl md:text-4xl font-bold mb-4">
+              Discover Any Company's Ethics Rating
+            </h2>
+            <p className="text-lg text-muted-foreground max-w-2xl mx-auto mb-8">
+              Search our comprehensive database of company ethics ratings powered by AI and community reviews
+            </p>
+          </div>
+          <CompanySearch />
         </div>
       </section>
 
