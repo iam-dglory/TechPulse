@@ -9,27 +9,25 @@ export async function GET(
     const { requestId } = await params
     const supabase = await createClient()
 
-    // Get score request
-    const { data: scoreRequest, error } = await supabase
+    const { data, error } = await supabase
       .from('score_requests')
       .select('*')
       .eq('id', requestId)
       .single()
 
-    if (error || !scoreRequest) {
-      return NextResponse.json({ error: 'Score request not found' }, { status: 404 })
-    }
+    if (error) throw error
 
     return NextResponse.json({
-      id: scoreRequest.id,
-      status: scoreRequest.status,
-      scores: scoreRequest.scores,
-      error_message: scoreRequest.error_message,
-      created_at: scoreRequest.created_at,
-      completed_at: scoreRequest.completed_at
+      status: data.status,
+      progress: data.progress || 0,
+      currentStep: data.current_step,
+      scores: data.status === 'completed' ? data.score_breakdown : null,
+      error: data.error_message,
+      completedAt: data.completed_at,
+      processingTime: data.processing_duration_ms
     })
   } catch (error: any) {
     console.error('Get score status error:', error)
-    return NextResponse.json({ error: error.message || 'Failed to get score status' }, { status: 500 })
+    return NextResponse.json({ error: error.message }, { status: 500 })
   }
 }

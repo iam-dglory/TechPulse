@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, Suspense } from "react"
 import { useRouter, useSearchParams } from "next/navigation"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
@@ -11,7 +11,7 @@ import { AlertCircle, Building2, CheckCircle2, Loader2 } from "lucide-react"
 import Link from "next/link"
 import { toast } from "@/hooks/use-toast"
 
-export default function CompanyNotFoundPage() {
+function CompanyNotFoundContent() {
   const searchParams = useSearchParams()
   const router = useRouter()
   const searchQuery = searchParams.get("search") || ""
@@ -231,5 +231,26 @@ export default function CompanyNotFoundPage() {
         </Card>
       </div>
     </div>
+  )
+}
+
+export default function CompanyNotFoundPage() {
+  return (
+    <Suspense fallback={
+      <div className="container mx-auto px-4 py-16">
+        <div className="max-w-2xl mx-auto">
+          <Card>
+            <CardContent className="pt-6">
+              <div className="flex items-center justify-center gap-3">
+                <Loader2 className="w-6 h-6 animate-spin" />
+                <p>Loading...</p>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+      </div>
+    }>
+      <CompanyNotFoundContent />
+    </Suspense>
   )
 }
