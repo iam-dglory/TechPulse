@@ -157,13 +157,56 @@ export function ScoringProgress({
           ))}
         </div>
 
-        {/* Info Box */}
-        <div className="bg-gradient-to-r from-blue-50 to-purple-50 p-4 rounded-lg border border-blue-200">
-          <p className="text-sm text-gray-700">
-            <strong>What's happening:</strong> Our AI is analyzing publicly available information,
-            company policies, news articles, and community reviews to generate comprehensive
-            ethics scores across 5 key dimensions.
-          </p>
+        {/* Methodology Info */}
+        <div className="space-y-4">
+          <div className="bg-gradient-to-r from-blue-50 to-purple-50 p-4 rounded-lg border border-blue-200">
+            <p className="text-sm font-semibold text-gray-900 mb-2">What's happening:</p>
+            <p className="text-sm text-gray-700 mb-3">
+              Our AI is analyzing publicly available information, company policies, news articles,
+              and community reviews to generate comprehensive ethics scores across 5 key dimensions.
+            </p>
+          </div>
+
+          <div className="bg-white p-4 rounded-lg border border-gray-200">
+            <p className="text-sm font-semibold text-gray-900 mb-3">How Scores Are Calculated:</p>
+            <div className="space-y-2 text-xs text-gray-700">
+              <div className="flex gap-2">
+                <span className="font-bold text-blue-600">1.</span>
+                <div>
+                  <strong>Data Collection:</strong> We gather data from user reviews, company websites,
+                  public reports, news articles, and regulatory filings
+                </div>
+              </div>
+              <div className="flex gap-2">
+                <span className="font-bold text-blue-600">2.</span>
+                <div>
+                  <strong>AI Analysis:</strong> GPT-4 analyzes content across 5 dimensions: Privacy,
+                  Transparency, Labor Practices, Environmental Impact, and Community Impact
+                </div>
+              </div>
+              <div className="flex gap-2">
+                <span className="font-bold text-blue-600">3.</span>
+                <div>
+                  <strong>Evidence-Based Scoring:</strong> Each score (0-10) is backed by specific
+                  evidence and reasoning, with confidence levels (high/medium/low)
+                </div>
+              </div>
+              <div className="flex gap-2">
+                <span className="font-bold text-blue-600">4.</span>
+                <div>
+                  <strong>Weighted Average:</strong> Overall score is calculated by averaging all
+                  dimensions, with adjustments based on data quality and confidence
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="bg-amber-50 p-4 rounded-lg border border-amber-200">
+            <p className="text-xs text-amber-800">
+              <strong>Scoring Scale:</strong> 9-10 = Exceptional | 7-8 = Good | 5-6 = Average |
+              3-4 = Concerning | 0-2 = Critical Issues
+            </p>
+          </div>
         </div>
       </CardContent>
     </Card>

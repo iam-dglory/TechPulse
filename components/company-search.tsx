@@ -2,18 +2,42 @@
 
 import { useState } from "react"
 import { useRouter } from "next/navigation"
-import { Search, ArrowRight } from "lucide-react"
+import { Search, ArrowRight, Loader2 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 
 export function CompanySearch() {
   const [searchQuery, setSearchQuery] = useState("")
+  const [isSearching, setIsSearching] = useState(false)
   const router = useRouter()
 
-  const handleSearch = (e: React.FormEvent) => {
+  const handleSearch = async (e: React.FormEvent) => {
     e.preventDefault()
-    if (searchQuery.trim()) {
+    if (!searchQuery.trim()) return
+
+    setIsSearching(true)
+
+    try {
+      // Search for the company
+      const response = await fetch(`/api/companies?search=${encodeURIComponent(searchQuery.trim())}&limit=5`)
+      const result = await response.json()
+
+      // Handle paginated response
+      const companies = result.data || []
+
+      if (companies && companies.length > 0) {
+        // Company found - redirect to first match
+        router.push(`/companies/${companies[0].slug}`)
+      } else {
+        // Company not found - redirect to not-found page
+        router.push(`/companies/not-found?search=${encodeURIComponent(searchQuery.trim())}`)
+      }
+    } catch (error) {
+      console.error('Search error:', error)
+      // Fallback to regular search page
       router.push(`/companies?search=${encodeURIComponent(searchQuery.trim())}`)
+    } finally {
+      setIsSearching(false)
     }
   }
 
@@ -28,11 +52,21 @@ export function CompanySearch() {
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             className="pl-10 h-12 text-base"
+            disabled={isSearching}
           />
         </div>
-        <Button type="submit" size="lg" className="gap-2">
-          Get Score
-          <ArrowRight className="w-4 h-4" />
+        <Button type="submit" size="lg" className="gap-2" disabled={isSearching}>
+          {isSearching ? (
+            <>
+              <Loader2 className="w-4 h-4 animate-spin" />
+              Searching...
+            </>
+          ) : (
+            <>
+              Get Score
+              <ArrowRight className="w-4 h-4" />
+            </>
+          )}
         </Button>
       </div>
       <p className="text-sm text-muted-foreground mt-2 text-center">

@@ -209,7 +209,12 @@ export function ScoreResults({ companyName, companySlug, scores }: ScoreResultsP
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <p className="text-sm text-gray-700">{scores.methodology}</p>
+            <p className="text-sm text-gray-700 mb-3">{scores.methodology}</p>
+            <div className="text-xs text-gray-600 space-y-1">
+              <p><strong>AI Model:</strong> GPT-4 Turbo (OpenAI)</p>
+              <p><strong>Analysis Date:</strong> {new Date().toLocaleDateString()}</p>
+              <p><strong>Temperature:</strong> 0.3 (for consistency)</p>
+            </div>
           </CardContent>
         </Card>
 
@@ -235,6 +240,88 @@ export function ScoreResults({ companyName, companySlug, scores }: ScoreResultsP
           </CardContent>
         </Card>
       </div>
+
+      {/* Detailed Scoring Criteria */}
+      <Card className="bg-gradient-to-br from-blue-50 to-indigo-50">
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <Shield className="w-5 h-5" />
+            How Each Score Is Calculated
+          </CardTitle>
+          <CardDescription>
+            Transparent breakdown of our AI-powered scoring methodology
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <div className="grid md:grid-cols-2 gap-4 text-sm">
+            <div className="bg-white p-3 rounded-lg border border-blue-200">
+              <h4 className="font-semibold text-blue-900 mb-2">🔒 Privacy & Data Protection</h4>
+              <p className="text-xs text-gray-700">
+                Evaluates data collection, user consent, GDPR/CCPA compliance, security measures,
+                breach history, and transparency in data usage.
+              </p>
+            </div>
+
+            <div className="bg-white p-3 rounded-lg border border-green-200">
+              <h4 className="font-semibold text-green-900 mb-2">📊 Transparency & Accountability</h4>
+              <p className="text-xs text-gray-700">
+                Assesses public reporting, governance structure, stakeholder communication,
+                audit practices, and leadership accountability.
+              </p>
+            </div>
+
+            <div className="bg-white p-3 rounded-lg border border-purple-200">
+              <h4 className="font-semibold text-purple-900 mb-2">👥 Labor Practices & Diversity</h4>
+              <p className="text-xs text-gray-700">
+                Reviews employee treatment, work-life balance, compensation, diversity initiatives,
+                inclusion programs, and harassment policies.
+              </p>
+            </div>
+
+            <div className="bg-white p-3 rounded-lg border border-emerald-200">
+              <h4 className="font-semibold text-emerald-900 mb-2">🌍 Environmental Impact</h4>
+              <p className="text-xs text-gray-700">
+                Analyzes carbon footprint, renewable energy usage, waste management,
+                sustainability initiatives, and climate commitments.
+              </p>
+            </div>
+
+            <div className="bg-white p-3 rounded-lg border border-orange-200 md:col-span-2">
+              <h4 className="font-semibold text-orange-900 mb-2">🤝 Community & Social Impact</h4>
+              <p className="text-xs text-gray-700">
+                Evaluates social responsibility programs, charitable giving, community engagement,
+                ethical AI practices, accessibility, and digital divide initiatives.
+              </p>
+            </div>
+          </div>
+
+          <div className="bg-white p-4 rounded-lg border-2 border-blue-300">
+            <h4 className="font-semibold text-blue-900 mb-2 text-sm">Scoring Scale (0-10):</h4>
+            <div className="grid grid-cols-2 md:grid-cols-5 gap-2 text-xs">
+              <div className="text-center p-2 bg-red-100 rounded">
+                <div className="font-bold text-red-700">0-2</div>
+                <div className="text-red-600">Critical</div>
+              </div>
+              <div className="text-center p-2 bg-orange-100 rounded">
+                <div className="font-bold text-orange-700">3-4</div>
+                <div className="text-orange-600">Concerning</div>
+              </div>
+              <div className="text-center p-2 bg-yellow-100 rounded">
+                <div className="font-bold text-yellow-700">5-6</div>
+                <div className="text-yellow-600">Average</div>
+              </div>
+              <div className="text-center p-2 bg-green-100 rounded">
+                <div className="font-bold text-green-700">7-8</div>
+                <div className="text-green-600">Good</div>
+              </div>
+              <div className="text-center p-2 bg-emerald-100 rounded">
+                <div className="font-bold text-emerald-700">9-10</div>
+                <div className="text-emerald-600">Exceptional</div>
+              </div>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
 
       {/* Action Buttons */}
       <Card>
