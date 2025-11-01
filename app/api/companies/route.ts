@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
 import { getCached, setCache } from '@/lib/redis'
 import { generateSlug } from '@/lib/utils'
+import { randomUUID } from 'crypto'
 
 export async function GET(request: Request) {
   try {
@@ -193,7 +194,7 @@ async function handleClaim(request: Request) {
     return NextResponse.json({ error: 'Company not found' }, { status: 404 })
   }
 
-  const verificationToken = crypto.randomUUID()
+  const verificationToken = randomUUID()
 
   const { data: claim, error } = await supabase
     .from('company_claims')
@@ -231,7 +232,7 @@ async function handleRegister(request: Request) {
   }
 
   const slug = generateSlug(companyName)
-  const verificationToken = crypto.randomUUID()
+  const verificationToken = randomUUID()
 
   const { data: registration, error } = await supabase
     .from('company_registrations')
