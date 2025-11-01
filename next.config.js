@@ -8,18 +8,26 @@ const nextConfig = {
       },
     ],
   },
-  // Disable static optimization for pages with errors
+  // Experimental features
   experimental: {
     serverActions: {
       bodySizeLimit: '2mb',
     },
   },
-  // Skip type checking during build to identify runtime errors
+
+  // TypeScript configuration
   typescript: {
     ignoreBuildErrors: false,
   },
+
+  // ESLint configuration
   eslint: {
     ignoreDuringBuilds: false,
+  },
+
+  // Generate build ID to force cache invalidation
+  generateBuildId: async () => {
+    return `build-${Date.now()}`
   },
 }
 
