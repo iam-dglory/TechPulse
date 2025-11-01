@@ -9,6 +9,9 @@ import { ExternalLink, TrendingUp, Users, Star } from "lucide-react"
 import { formatDate } from "@/lib/utils"
 import { ScoreRequestButton } from "@/components/companies/score-request-button"
 
+// Force dynamic rendering to avoid build-time errors
+export const dynamic = 'force-dynamic'
+
 // Helper function to generate score explanations
 function getScoreExplanation(dimensionName: string, score: number, reviewCount: number): string {
   const scoreLevel = score >= 8 ? "excellent" : score >= 6.5 ? "good" : score >= 5 ? "average" : score >= 3 ? "below average" : "poor"
