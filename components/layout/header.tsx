@@ -49,6 +49,22 @@ export function Header() {
             >
               Companies
             </Link>
+            <Link
+              href="/compare"
+              className={`transition-colors hover:text-foreground/80 ${
+                pathname === "/compare" ? "text-foreground" : "text-foreground/60"
+              }`}
+            >
+              Compare
+            </Link>
+            <Link
+              href="/discover"
+              className={`transition-colors hover:text-foreground/80 ${
+                pathname === "/discover" ? "text-foreground" : "text-foreground/60"
+              }`}
+            >
+              Discover
+            </Link>
             {user && (
               <Link
                 href="/dashboard"
