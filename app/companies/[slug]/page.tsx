@@ -9,15 +9,10 @@ import { ExternalLink, TrendingUp, Users, Star } from "lucide-react"
 import { formatDate } from "@/lib/utils"
 import { ScoreRequestButton } from "@/components/companies/score-request-button"
 
-// Force dynamic rendering to avoid build-time errors
-export const dynamic = 'force-dynamic'
+// Use Incremental Static Regeneration for company pages
+export const revalidate = 3600 // Revalidate every hour
 export const dynamicParams = true
-export const revalidate = 0
-
-// Prevent static generation
-export async function generateStaticParams() {
-  return []
-}
+export const dynamic = 'auto'
 
 // Helper function to generate score explanations
 function getScoreExplanation(dimensionName: string, score: number, reviewCount: number): string {

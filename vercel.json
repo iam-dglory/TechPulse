@@ -5,5 +5,14 @@
   "devCommand": "next dev",
   "installCommand": "npm install",
   "framework": "nextjs",
-  "regions": ["iad1"]
+  "regions": ["iad1"],
+  "functions": {
+    "app/**": {
+      "maxDuration": 10
+    },
+    "app/api/**": {
+      "maxDuration": 10
+    }
+  },
+  "crons": []
 }

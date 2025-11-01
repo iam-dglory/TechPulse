@@ -1,0 +1,26 @@
+# Dependencies
+node_modules
+
+# Build output
+.next
+out
+
+# Environment files (use Vercel dashboard instead)
+.env*.local
+
+# Documentation and non-essential files
+*.md
+!README.md
+
+# Database files
+*.sql
+
+# Test files
+**/*.test.ts
+**/*.test.tsx
+**/*.spec.ts
+**/*.spec.tsx
+
+# Git
+.git
+.gitignore

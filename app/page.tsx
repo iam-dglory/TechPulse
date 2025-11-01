@@ -7,9 +7,9 @@ import { createClient } from "@/lib/supabase/server"
 import { BookDemoDialog } from "@/components/book-demo-dialog"
 import { CompanySearch } from "@/components/company-search"
 
-// Force dynamic rendering to avoid build-time errors
-export const dynamic = 'force-dynamic'
-export const revalidate = 0
+// Use Incremental Static Regeneration to reduce serverless function count
+export const revalidate = 3600 // Revalidate every hour
+export const dynamic = 'auto'
 
 export default async function HomePage() {
   const supabase = await createClient()
