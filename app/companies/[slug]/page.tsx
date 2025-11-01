@@ -11,6 +11,13 @@ import { ScoreRequestButton } from "@/components/companies/score-request-button"
 
 // Force dynamic rendering to avoid build-time errors
 export const dynamic = 'force-dynamic'
+export const dynamicParams = true
+export const revalidate = 0
+
+// Prevent static generation
+export async function generateStaticParams() {
+  return []
+}
 
 // Helper function to generate score explanations
 function getScoreExplanation(dimensionName: string, score: number, reviewCount: number): string {

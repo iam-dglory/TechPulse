@@ -31,7 +31,7 @@ function CompanyNotFoundContent() {
     setIsSubmitting(true)
 
     try {
-      const response = await fetch("/api/companies/request", {
+      const response = await fetch("/api/companies?action=request", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData)

@@ -6,6 +6,9 @@ import { ScoringProgress } from '@/components/companies/scoring-progress'
 import { ScoreResults } from '@/components/companies/score-results'
 import { toast } from '@/hooks/use-toast'
 
+// Prevent static generation for this dynamic route
+export const dynamic = 'force-dynamic'
+
 interface PageProps {
   params: Promise<{
     slug: string
