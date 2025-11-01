@@ -1,22 +1,53 @@
-import { redirect } from 'next/navigation'
-import { createClient } from '@/lib/supabase/server'
+'use client'
+
+import { useEffect, useState } from 'react'
+import { useRouter } from 'next/navigation'
+import { createClient } from '@/lib/supabase/client'
 import { AdminSidebar } from '@/components/admin/sidebar'
 
-export default async function AdminLayout({ children }: { children: React.ReactNode }) {
-  const supabase = await createClient()
+export default function AdminLayout({ children }: { children: React.ReactNode }) {
+  const router = useRouter()
+  const [isAuthorized, setIsAuthorized] = useState(false)
+  const [isLoading, setIsLoading] = useState(true)
 
-  const { data: { user } } = await supabase.auth.getUser()
-  if (!user) redirect('/login')
+  useEffect(() => {
+    const checkAuth = async () => {
+      const supabase = createClient()
+      const { data: { user } } = await supabase.auth.getUser()
 
-  const { data: profile } = await supabase
-    .from('profiles')
-    .select('role')
-    .eq('id', user.id)
-    .single()
+      if (!user) {
+        router.push('/login')
+        return
+      }
 
-  // Check if user is admin or moderator
-  if (profile?.role !== 'admin' && profile?.role !== 'moderator') {
-    redirect('/')
+      const { data: profile } = await supabase
+        .from('profiles')
+        .select('role')
+        .eq('id', user.id)
+        .single()
+
+      if (profile?.role !== 'admin' && profile?.role !== 'moderator') {
+        router.push('/')
+        return
+      }
+
+      setIsAuthorized(true)
+      setIsLoading(false)
+    }
+
+    checkAuth()
+  }, [router])
+
+  if (isLoading) {
+    return (
+      <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+        <div>Loading...</div>
+      </div>
+    )
+  }
+
+  if (!isAuthorized) {
+    return null
   }
 
   return (
