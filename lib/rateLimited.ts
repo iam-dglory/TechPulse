@@ -1,66 +1,34 @@
-import { NextResponse } from 'next/server'
-
-// Simple rate limiting utility
-// For production, consider using Upstash Rate Limit or similar service
+import { NextRequest, NextResponse } from 'next/server';
 
 interface RateLimitConfig {
-  interval: number // Time window in milliseconds
-  limit: number // Max requests per interval
+  uniqueTokenPerInterval?: number;
+  interval?: number;
 }
 
-const requestCounts = new Map<string, { count: number; resetTime: number }>()
+export function rateLimit(config: RateLimitConfig = {}) {
+  const tokenCache = new Map();
 
-export function rateLimited(config: RateLimitConfig = { interval: 60000, limit: 60 }) {
-  return function (handler: Function) {
-    return async function (request: Request, context?: any) {
-      // Get client identifier (IP address or other identifier)
-      const identifier = request.headers.get('x-forwarded-for') ||
-                        request.headers.get('x-real-ip') ||
-                        'anonymous'
-
-      const now = Date.now()
-      const record = requestCounts.get(identifier)
-
-      if (record) {
-        if (now < record.resetTime) {
-          if (record.count >= config.limit) {
-            return NextResponse.json(
-              { error: 'Too many requests. Please try again later.' },
-              {
-                status: 429,
-                headers: {
-                  'X-RateLimit-Limit': config.limit.toString(),
-                  'X-RateLimit-Remaining': '0',
-                  'X-RateLimit-Reset': record.resetTime.toString(),
-                }
-              }
-            )
-          }
-          record.count++
-        } else {
-          // Reset the counter
-          record.count = 1
-          record.resetTime = now + config.interval
-        }
-      } else {
-        // First request from this identifier
-        requestCounts.set(identifier, {
-          count: 1,
-          resetTime: now + config.interval,
-        })
+  return {
+    check: async (limit: number, token: string) => {
+      const tokenCount = tokenCache.get(token) || [0];
+      if (tokenCount[0] === 0) {
+        tokenCache.set(token, tokenCount);
       }
+      tokenCount[0] += 1;
 
-      // Clean up old entries periodically
-      if (Math.random() < 0.01) {
-        for (const [key, value] of requestCounts.entries()) {
-          if (now > value.resetTime) {
-            requestCounts.delete(key)
-          }
-        }
-      }
+      const currentUsage = tokenCount[0];
+      const isRateLimited = currentUsage >= limit;
 
-      // Call the actual handler
-      return handler(request, context)
-    }
-  }
+      return {
+        success: !isRateLimited,
+        limit,
+        remaining: isRateLimited ? 0 : limit - currentUsage,
+      };
+    },
+  };
 }
+
+export const rateLimited = rateLimit({
+  interval: 60 * 1000, // 60 seconds
+  uniqueTokenPerInterval: 500,
+});
