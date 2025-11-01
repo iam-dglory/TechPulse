@@ -21,7 +21,7 @@ export default function ReviewModerationPage() {
   const loadReviews = async () => {
     setLoading(true)
     try {
-      const res = await fetch(`/api/admin/reviews?status=${filter}`)
+      const res = await fetch(`/api/admin?resource=reviews&status=${filter}`)
       const data = await res.json()
       setReviews(data || [])
     } catch (error) {
@@ -33,7 +33,7 @@ export default function ReviewModerationPage() {
 
   const handleApprove = async (reviewId: string) => {
     try {
-      const res = await fetch(`/api/admin/reviews/${reviewId}/approve`, { method: 'POST' })
+      const res = await fetch(`/api/admin?action=approve&reviewId=${reviewId}`, { method: 'POST' })
       if (res.ok) {
         toast({ title: 'Review approved successfully' })
         loadReviews()
@@ -45,7 +45,7 @@ export default function ReviewModerationPage() {
 
   const handleReject = async (reviewId: string) => {
     try {
-      const res = await fetch(`/api/admin/reviews/${reviewId}/reject`, { method: 'POST' })
+      const res = await fetch(`/api/admin?action=reject&reviewId=${reviewId}`, { method: 'POST' })
       if (res.ok) {
         toast({ title: 'Review rejected' })
         loadReviews()
