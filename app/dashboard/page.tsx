@@ -7,6 +7,10 @@ import { createClient } from "@/lib/supabase/server"
 import { Star, TrendingUp, Award, Building2 } from "lucide-react"
 import { formatDate } from "@/lib/utils"
 
+// Force dynamic rendering to avoid build-time errors
+export const dynamic = 'force-dynamic'
+export const revalidate = 0
+
 export default async function DashboardPage() {
   const supabase = await createClient()
 

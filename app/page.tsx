@@ -7,6 +7,10 @@ import { createClient } from "@/lib/supabase/server"
 import { BookDemoDialog } from "@/components/book-demo-dialog"
 import { CompanySearch } from "@/components/company-search"
 
+// Force dynamic rendering to avoid build-time errors
+export const dynamic = 'force-dynamic'
+export const revalidate = 0
+
 export default async function HomePage() {
   const supabase = await createClient()
 

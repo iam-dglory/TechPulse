@@ -4,6 +4,10 @@ import { Badge } from "@/components/ui/badge"
 import { createClient } from "@/lib/supabase/server"
 import { Building2 } from "lucide-react"
 
+// Force dynamic rendering to avoid build-time errors
+export const dynamic = 'force-dynamic'
+export const revalidate = 0
+
 export default async function CompaniesPage({
   searchParams,
 }: {
