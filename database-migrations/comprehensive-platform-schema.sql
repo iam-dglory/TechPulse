@@ -50,6 +50,9 @@ ALTER TABLE companies ADD COLUMN IF NOT EXISTS stock_ticker TEXT;
 ALTER TABLE companies ADD COLUMN IF NOT EXISTS is_public BOOLEAN DEFAULT false;
 ALTER TABLE companies ADD COLUMN IF NOT EXISTS company_size TEXT CHECK (company_size IN ('startup', 'small', 'medium', 'large', 'enterprise'));
 ALTER TABLE companies ADD COLUMN IF NOT EXISTS tags TEXT[];
+ALTER TABLE companies ADD COLUMN IF NOT EXISTS claimed_by UUID REFERENCES auth.users(id);
+ALTER TABLE companies ADD COLUMN IF NOT EXISTS claimed_at TIMESTAMPTZ;
+ALTER TABLE companies ADD COLUMN IF NOT EXISTS claim_verified BOOLEAN DEFAULT false;
 
 -- 3. Create rankings table
 CREATE TABLE IF NOT EXISTS company_rankings (
